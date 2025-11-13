@@ -7,6 +7,7 @@ import SignupPage from '../pages/Auth/SignupPage';
 import ClientDashboard from "../pages/Client/ClientDashboard";
 import ProtectedRoute from "../components/ProtectedRoute/ProtectedRoute";
 import AdminDashboard from "../pages/Admin/AdminDashboard";
+import Logs from "../components/Admin/logs";
 
 export default function RoutesList() {
 
@@ -16,10 +17,12 @@ export default function RoutesList() {
         <Routes>
 
             <Route path="/" element={<IndexPage />} />
+            <Route path="/logs" element={<Logs />} />
             <Route path="/products" element={<ProductsPage />} />
             <Route path="/login" element={<LoginPage />} />
             <Route path="/signup" element={<SignupPage />} />
             <Route path="/client" element={<ProtectedRoute><ClientDashboard /></ProtectedRoute>} />
+           
 
             {/* Admin Routes */}
             <Route path="/admin" element={<ProtectedRoute><AdminDashboard /></ProtectedRoute>} />
