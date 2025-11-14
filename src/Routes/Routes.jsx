@@ -7,6 +7,7 @@ import SignupPage from '../pages/Auth/SignupPage';
 import ClientDashboard from "../pages/Client/ClientDashboard";
 import ProtectedRoute from "../components/ProtectedRoute/ProtectedRoute";
 import AdminDashboard from "../pages/Admin/AdminDashboard";
+import SellerPage from "../pages/Seller/SellerPage";
 import Layout from "../components/Layouts/Layout";
 import ProfilePage from "../pages/Client/ProfilePage";
 
@@ -29,6 +30,9 @@ export default function RoutesList() {
 
             {/* Admin Routes */}
             <Route path="/admin" element={<ProtectedRoute><AdminDashboard /></ProtectedRoute>} />
+            
+            {/* Seller Routes */}
+            <Route path="/seller" element={<ProtectedRoute><SellerPage /></ProtectedRoute>} />
             
             {/* Error Routes */}
             <Route path={'*'} element={<NotFound />} />
