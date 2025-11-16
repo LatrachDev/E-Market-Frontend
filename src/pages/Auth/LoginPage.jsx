@@ -2,8 +2,7 @@ import { Link, useNavigate } from "react-router-dom";
 import LoginImage from "../../assets/Images/login-image.png";
 import LoginHeader from "../../components/Layouts/LoginHeader"
 import { useEffect, useState } from "react";
-import axios from "axios";
-import API_ENDPOINTS from "../../config/api";
+import API_ENDPOINTS, { api } from "../../config/api";
 
 export default function Login() {
 
@@ -19,7 +18,7 @@ export default function Login() {
     setSuccess("");
 
     try {
-      const response = await axios.post(API_ENDPOINTS.AUTH.LOGIN, {
+      const response = await api.post(API_ENDPOINTS.AUTH.LOGIN, {
         email,
         password,
       });

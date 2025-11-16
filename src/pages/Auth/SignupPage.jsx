@@ -4,7 +4,7 @@ import { Link, useNavigate } from "react-router-dom";
 import LoginImage from "../../assets/Images/login-image.png";
 import LoginHeader from "../../components/Layouts/LoginHeader";
 import axios from "axios";
-import { API_ENDPOINTS } from "../../config/api";
+import API_ENDPOINTS, { api } from "../../config/api";
 
 export default function SignupPage() {
   const [formData, setFormData] = useState({
@@ -77,7 +77,7 @@ export default function SignupPage() {
     }
 
     try {
-      const response = await axios.post(API_ENDPOINTS.AUTH.SIGNUP, {
+      const response = await api.post(API_ENDPOINTS.AUTH.SIGNUP, {
         fullname: formData.fullname,
         email: formData.email,
         password: formData.password
