@@ -1,45 +1,37 @@
-// src/pages/Admin/UserManagement.jsx
-import React, { useEffect } from "react";
-import { useUsers } from "../../hooks/useUsers";
+import { useState } from "react";
+import { useUsers, useCreateUser, useUpdateUser, useDeleteUser } from "../../hooks/useUsers";
+import UserForm from "./UserForm";
+import UserTable from "./UserTable";
 
-export default function UserManagement() {
-  const { users, loading, error, fetchUsers } = useUsers();
+export default function AdminUsers() {
+  const { data: users, isLoading, error } = useUsers();
+  const createUser = useCreateUser();
+  const updateUser = useUpdateUser();
+  const deleteUser = useDeleteUser();
+  const [editingUser, setEditingUser] = useState(null);
 
-  useEffect(() => {
-    fetchUsers();
-  }, []);
+  const handleSubmit = (data) => {
+    if (editingUser) {
+      updateUser.mutate({ id: editingUser.id, data });
+      setEditingUser(null);
+    } else {
+      createUser.mutate(data);
+    }
+  };
 
-  if (loading) return <p>Chargement des utilisateurs...</p>;
-  if (error) return <p>Erreur : {error}</p>;
+  const handleEdit = (user) => setEditingUser(user);
+  const handleDelete = (id) => deleteUser.mutate(id);
+
+  if (isLoading) return <p>Chargement...</p>;
+  if (error) return <p>Erreur : {error.message}</p>;
 
   return (
-    <div className="rounded-3xl border border-brandRed/10 bg-white p-8 shadow-sm">
-      <h2 className="text-2xl font-semibold font-playfair text-gray-900 mb-4">
-        Gestion des utilisateurs
-      </h2>
+    <div>
+      <h1>Gestion des utilisateurs</h1>
 
-      {users.length === 0 ? (
-        <p>Aucun utilisateur trouvé.</p>
-      ) : (
-        <table className="min-w-full border-collapse border border-gray-200">
-          <thead>
-            <tr className="bg-gray-100 text-left">
-              <th className="p-3 border-b">Nom</th>
-              <th className="p-3 border-b">Email</th>
-              <th className="p-3 border-b">Rôle</th>
-            </tr>
-          </thead>
-          <tbody>
-            {users.map((user) => (
-              <tr key={user._id} className="hover:bg-gray-50">
-                <td className="p-3 border-b">{user.fullname}</td>
-                <td className="p-3 border-b">{user.email}</td>
-                <td className="p-3 border-b">{user.role}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      )}
+      <UserForm onSubmit={handleSubmit} defaultValues={editingUser} />
+
+      <UserTable users={users} onUpdate={handleEdit} onDelete={handleDelete} />
     </div>
   );
 }
