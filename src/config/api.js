@@ -1,6 +1,9 @@
 import axios from "axios";
 
 const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001/api';
+import axios from "axios";
+
+const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001/api';
 // const API_BASE_URL = 'http://16.16.253.155:8000/api';
 
 export const API_ENDPOINTS = {
@@ -14,6 +17,10 @@ export const API_ENDPOINTS = {
     },
     PROFILE: {
         MYPROFILE: "/auth/profile",
+    },
+    ORDERS: {
+        GET_ONE: "/orders/:userId",
+        GET_ALL:"/orders",
     }
 };
 
