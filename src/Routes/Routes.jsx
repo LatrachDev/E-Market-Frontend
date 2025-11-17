@@ -13,6 +13,7 @@ import ProfilePage from "../pages/Client/ProfilePage";
 import Order from "../components/Client/Order";
 import Orders from "../components/Admin/Orders";
 import OrdersPage from "../pages/Admin/OrdersPage";
+import MyOrders from "../pages/Client/MyOrders";
 
 export default function RoutesList() {
 
@@ -29,7 +30,7 @@ export default function RoutesList() {
             <Route path="/client">
                 <Route index element={<ProtectedRoute><Layout><ClientDashboard /></Layout></ProtectedRoute>} />
                 <Route path="profile" element={<ProtectedRoute><Layout><ProfilePage /></Layout></ProtectedRoute>} />
-                <Route path="myOrders" element={<ProtectedRoute><Layout><Order /></Layout></ProtectedRoute>}/>
+                <Route path="myOrders" element={<ProtectedRoute><Layout><MyOrders /></Layout></ProtectedRoute>}/>
             </Route>
 
             {/* Admin Routes */}
