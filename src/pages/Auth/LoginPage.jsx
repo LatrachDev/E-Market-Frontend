@@ -19,7 +19,7 @@ export default function Login() {
     setSuccess("");
 
     try {
-      const response = await axios.post(API_ENDPOINTS.AUTH.LOGIN, {
+      const response = await api.post(API_ENDPOINTS.AUTH.LOGIN, {
         email,
         password,
       });

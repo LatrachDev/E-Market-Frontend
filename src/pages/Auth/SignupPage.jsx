@@ -77,7 +77,7 @@ export default function SignupPage() {
     }
 
     try {
-      const response = await axios.post(API_ENDPOINTS.AUTH.SIGNUP, {
+      const response = await api.post(API_ENDPOINTS.AUTH.SIGNUP, {
         fullname: formData.fullname,
         email: formData.email,
         password: formData.password
