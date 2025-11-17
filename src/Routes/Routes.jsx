@@ -12,6 +12,7 @@ import Layout from "../components/Layouts/Layout";
 import ProfilePage from "../pages/Client/ProfilePage";
 import Order from "../components/Client/Order";
 import Orders from "../components/Admin/Orders";
+import OrdersPage from "../pages/Admin/OrdersPage";
 
 export default function RoutesList() {
 
@@ -33,7 +34,7 @@ export default function RoutesList() {
 
             {/* Admin Routes */}
             <Route path="/admin" element={<ProtectedRoute><AdminDashboard /></ProtectedRoute>} />
-            <Route path="/orders" element={<ProtectedRoute><Layout><Orders /></Layout></ProtectedRoute>} />
+            <Route path="/orders" element={<ProtectedRoute><Layout><OrdersPage /></Layout></ProtectedRoute>} />
             
             {/* Seller Routes */}
             <Route path="/seller" element={<ProtectedRoute><SellerPage /></ProtectedRoute>} />
