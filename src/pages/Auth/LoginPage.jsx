@@ -3,6 +3,9 @@ import LoginImage from "../../assets/Images/login-image.png";
 import LoginHeader from "../../components/LoginHeader"
 import { useEffect, useState } from "react";
 import API_ENDPOINTS, { api } from "../../config/api";
+import { useDispatch } from "react-redux";
+import { setCredentials } from "../../features/authSlice";
+
 import { useForm } from "react-hook-form";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -17,6 +20,8 @@ const schema = yup.object({
 export default function Login() {
   const navigate = useNavigate();
 
+  const dispatch = useDispatch();
+
   const { register: loginField, handleSubmit, formState: { errors, isSubmitting } } = useForm({
     resolver: yupResolver(schema),
   });
@@ -27,6 +32,12 @@ const onSubmit = async (data) => {
         email: data.email,
         password: data.password,
       });
+
+        dispatch(setCredentials({
+      token: response.data.data.token,
+      user: response.data.data.user,
+    }));
+
 
       if (response.data?.data?.token) {
         localStorage.setItem("token", response.data.data.token);

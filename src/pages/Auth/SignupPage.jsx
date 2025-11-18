@@ -9,6 +9,10 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import { useForm } from "react-hook-form";
 import API_ENDPOINTS, { api } from "../../config/api";
+import { useDispatch } from "react-redux";
+import { setCredentials } from "../../features/authSlice";
+import store from "../../features/store";
+
 
 const schema = yup.object({
   fullname: yup.string().required("Le nom complet est requis").min(3, "Au moins 3 caractères"),
@@ -18,6 +22,8 @@ const schema = yup.object({
 export default function SignupPage() {
   const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
+
+  const dispatch = useDispatch();
   const { register, handleSubmit, formState: { errors, isSubmitting } } = useForm({
     resolver: yupResolver(schema),
   });
@@ -42,11 +48,22 @@ export default function SignupPage() {
 
   const onSubmit = async (data) => {
     try {
-      const response = await api.post(API_ENDPOINTS.AUTH.SIGNUP, data);
+      const response = await api.post(API_ENDPOINTS.AUTH.SIGNUP, {
+        fullname: formData.fullname,
+        email: formData.email,
+        password: formData.password
+      });
 
-      toast.success("Compte créé avec succès!");
+      console.log('response: ', response);
+      
 
-      // Save token + user
+      dispatch(setCredentials({
+      token: response.data.data.token,
+      user: response.data.data.user,
+    }));
+    console.log(store.getState());
+    
+
       if (response.data?.data?.token) {
         localStorage.setItem("token", response.data.data.token);
       }
