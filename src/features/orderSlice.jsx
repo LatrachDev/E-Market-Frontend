@@ -13,6 +13,17 @@ export const fetchOrders = createAsyncThunk(
   }
 );
 
+export const deletOrder =createAsyncThunk(
+  "orders/deleteOrder",
+  async (id, { rejectWithValue }) => {
+    try {
+      const res = await api.delete(`/orders/${id}/soft`);
+      return res.data.data;
+    } catch (err) {
+      return rejectWithValue(err.response?.data?.message || err.message);
+    }
+  }
+);
 export const fetchOrdersAdmin = createAsyncThunk(
   "orders/fetchOrdersAdmin",
   async (_, { rejectWithValue }) => {
@@ -99,7 +110,21 @@ const ordersSlice = createSlice({
         state.loading = false;
         state.error = action.payload;
       })
-
+// delet order 
+.addCase(deletOrder.pending, (state) => {
+  state.loading = true;
+})
+  .addCase(deletOrder.fulfilled, (state, action) => {
+        state.loading = false;
+        const deletedId = action.payload?._id ?? action.payload?.id ?? action.payload;
+        if (!deletedId) return; // nothing to remove or unexpected payload
+        if (!Array.isArray(state.orders)) return;
+        state.orders = state.orders.filter(order => order && order._id !== deletedId);
+      })
+.addCase(deletOrder.rejected, (state, action) => {
+  state.loading = false;
+  state.error = action.payload;
+})
       // orders deleted
       .addCase(fetchOrdersDeleted.pending, (state) => {
         state.loading = true;

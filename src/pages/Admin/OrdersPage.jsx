@@ -1,8 +1,8 @@
-import React, { useEffect } from "react";
+import React, { use, useEffect } from "react";
 import useOrders from "../../Hooks/UseOrders";
 
 export default function OrdersPage() {
-  const { orders, loading, error, loadOrdersAdmin } = useOrders();
+  const { orders, loading, error, loadOrdersAdmin ,deleteOrder } = useOrders();
   console.log(orders);
   console.log("hi");
   console.log(error);
@@ -13,6 +13,7 @@ console.log("Redux STORE orders:", orders);
     loadOrdersAdmin();
   }, []);
 
+  
   if (loading) return <p>Chargement...</p>;
   if (error) return <p style={{ color: "red" }}>{error}</p>;
 
@@ -21,7 +22,7 @@ console.log("Redux STORE orders:", orders);
       <h1>les commandes</h1>
 
      {orders.map(order => (
- <div key={order._id}>
+ <div className="" key={order._id}>
   <h2>Commande : {order._id}</h2>
 
   <p><b>User :</b> {order.userId?.fullname}</p>
@@ -37,6 +38,8 @@ console.log("Redux STORE orders:", orders);
       <p>Price: {item.price} MAD</p>
     </div>
   ))}
+  <button onClick={() => deleteOrder(order._id)}>delete order</button>
+
 </div>
 
 ))}
