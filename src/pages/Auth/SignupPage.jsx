@@ -2,21 +2,31 @@ import { useState, useEffect } from "react";
 import { EyeOff, Eye } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 import LoginImage from "../../assets/Images/login-image.png";
-import LoginHeader from "../../components/Layouts/LoginHeader";
-import axios from "axios";
+import LoginHeader from "../../components/LoginHeader";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import { yupResolver } from "@hookform/resolvers/yup";
+import * as yup from "yup";
+import { useForm } from "react-hook-form";
 import API_ENDPOINTS, { api } from "../../config/api";
+import { useDispatch } from "react-redux";
+import { setCredentials } from "../../features/authSlice";
+import store from "../../features/store";
 
+
+const schema = yup.object({
+  fullname: yup.string().required("Le nom complet est requis").min(3, "Au moins 3 caractères"),
+  email: yup.string().required("L'email est requis").email("Email invalide"),
+  password: yup.string().required("Le mot de passe est requis").min(6, "Au moins 6 caractères"),
+}).required();
 export default function SignupPage() {
-  const [formData, setFormData] = useState({
-    fullname: "",
-    email: "",
-    password: ""
-  });
   const [showPassword, setShowPassword] = useState(false);
-  const [error, setError] = useState("");
-  const [success, setSuccess] = useState("");
   const navigate = useNavigate();
 
+  const dispatch = useDispatch();
+  const { register, handleSubmit, formState: { errors, isSubmitting } } = useForm({
+    resolver: yupResolver(schema),
+  });
   // Hide overflow for the signup page
   useEffect(() => {
     document.body.style.margin = '0';
@@ -36,75 +46,35 @@ export default function SignupPage() {
     };
   }, []);
 
-  const handleChange = (e) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value
+  const onSubmit = async (data) => {
+  try {
+    const response = await api.post(API_ENDPOINTS.AUTH.SIGNUP, {
+      fullname: data.fullname,
+      email: data.email,
+      password: data.password
     });
-  };
 
-  const validateForm = () => {
+    toast.success("Compte créé avec succès !");
 
-    if (!formData.fullname || !formData.email || !formData.password) {
-      return "Veuillez remplir tous les champs.";
-    }
-    
-    if (formData.password.length < 8) {
-      return "Le mot de passe doit contenir au moins 8 caractères.";
-    }
-    
-    if (!/[A-Z]/.test(formData.password)) {
-      return "Le mot de passe doit contenir au moins une lettre majuscule.";
-    }
+    dispatch(setCredentials({
+      token: response.data.data.token,
+      user: response.data.data.user,
+    }));
 
-    if (!/[a-z]/.test(formData.password)) {
-      return "Le mot de passe doit contenir au moins une lettre minuscule.";
+    if (response.data?.data?.token) {
+      localStorage.setItem("token", response.data.data.token);
+    }
+    if (response.data?.data?.user) {
+      localStorage.setItem("user", JSON.stringify(response.data.data.user));
     }
 
-    return null;
+    setTimeout(() => navigate("/client"), 1000);
 
+  } catch (error) {
+    const msg = error.response?.data?.message || "Erreur lors de l'inscription.";
+    toast.error(msg);
   }
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setError("");
-    setSuccess("");
-
-    const validationError = validateForm();
-    if (validationError) {
-      setError(validationError);
-      return;
-    }
-
-    try {
-      const response = await api.post(API_ENDPOINTS.AUTH.SIGNUP, {
-        fullname: formData.fullname,
-        email: formData.email,
-        password: formData.password
-      });
-
-      console.log('response: ', response);
-      
-      if (response.data?.data?.token) {
-        localStorage.setItem('token', response.data.data.token);
-        console.log('token stored successfully');
-      }
-      
-      if (response.data?.data?.user) {
-        localStorage.setItem('user', JSON.stringify(response.data.data.user));
-        console.log('user stored successfully');
-      }
-
-      navigate("/client", { 
-        state: { message: "Compte créé avec succès! Veuillez vous connecter." }
-      });
-      setSuccess("Compte créé avec succès! Veuillez vous connecter.");
-    } catch (error) {
-      console.error('Registration error');
-    }
-
-    console.log("Signup data:", formData);
-  };
+};
 
   return (
     <>
@@ -112,38 +82,25 @@ export default function SignupPage() {
       <div className="flex lg:flex-row w-full h-screen">
         {/* Form Section - Left side */}
         <div className="w-full lg:w-1/2 flex flex-col justify-center items-center px-8 lg:px-20 bg-[#FAFAFA]">
-          
+
           <div className="w-full -mt-16 max-w-lg">
             <h1 className="text-center font-playfair font-bold uppercase text-4xl lg:text-5xl mb-12 text-brandRed tracking-wide">
               Inscrivez-vous
             </h1>
 
-            {/* Success Message */}
-            {success && (
-              <div className="w-full mb-4 p-3 bg-green-100 border border-green-400 text-green-700 rounded">
-                {success}
-              </div>
-            )}
 
-            {/* Error Message */}
-            {error && (
-              <div className="w-full mb-4 p-3 bg-red-100 border border-red-400 text-red-700 rounded">
-                {error}
-              </div>
-            )}
 
-            <form onSubmit={handleSubmit} className="w-full">
+            <form onSubmit={handleSubmit(onSubmit)} className="w-full">
               {/* Full Name */}
               <div className="mb-6">
                 <input
                   type="text"
                   name="fullname"
                   placeholder="Nom Et Prénom"
-                  value={formData.fullname}
-                  onChange={handleChange}
+                  {...register("fullname")}
                   className="font-montserrat w-full px-4 py-3 border-2 border-black focus:border-brandRed focus:outline-none transition-colors bg-white text-gray-800"
-                  required
                 />
+                {errors.fullname && <p className="text-red-600 text-sm mt-1">{errors.fullname.message}</p>}
               </div>
 
               {/* Email */}
@@ -152,11 +109,10 @@ export default function SignupPage() {
                   type="email"
                   name="email"
                   placeholder="Email"
-                  value={formData.email}
-                  onChange={handleChange}
+                  {...register("email")}
                   className="font-montserrat w-full px-4 py-3 border-2 border-black focus:border-brandRed focus:outline-none transition-colors bg-white text-gray-800"
-                  required
                 />
+                {errors.email && <p className="text-red-600 text-sm mt-1">{errors.email.message}</p>}
               </div>
 
               {/* Password Fields in Row */}
@@ -167,11 +123,10 @@ export default function SignupPage() {
                     type={showPassword ? "text" : "password"}
                     name="password"
                     placeholder="Password"
-                    value={formData.password}
-                    onChange={handleChange}
+                    {...register("password")}
                     className="font-montserrat w-full px-4 py-3 border-2 border-black focus:border-brandRed focus:outline-none transition-colors bg-white text-gray-800 pr-10"
-                    required
                   />
+                  {errors.password && <p className="text-red-600 text-sm mt-1">{errors.password.message}</p>}
                   <button
                     type="button"
                     onClick={() => setShowPassword(!showPassword)}
@@ -181,7 +136,7 @@ export default function SignupPage() {
                   </button>
                 </div>
 
-   
+
               </div>
 
               {/* Register Button with decorative lines */}
@@ -221,6 +176,18 @@ export default function SignupPage() {
           />
         </div>
       </div>
+      <ToastContainer
+        position="top-right"
+        autoClose={3000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        toastStyle={{ zIndex: 9999 }}
+      />
     </>
   );
 }

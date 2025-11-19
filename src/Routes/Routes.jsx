@@ -5,17 +5,21 @@ import NotFound from "../pages/Error/NotFound";
 import LoginPage from '../pages/Auth/LoginPage';
 import SignupPage from '../pages/Auth/SignupPage';
 import ClientDashboard from "../pages/Client/ClientDashboard";
-import ProtectedRoute from "../components/ProtectedRoute/ProtectedRoute";
+import ProtectedRoute from "./ProtectedRoute";
 import AdminDashboard from "../pages/Admin/AdminDashboard";
 import SellerPage from "../pages/Seller/SellerPage";
-import Layout from "../components/Layouts/Layout";
+import Layout from "../components/Layout";
 import ProfilePage from "../pages/Client/ProfilePage";
 import AdminOverview from "../pages/Admin/AdminOverview";
 import AdminReports from "../pages/Admin/AdminReports";
 import AdminProducts from "../pages/Admin/AdminProducts";
 import AdminCategories from "../pages/Admin/AdminCategories";
-import AdminUsers from "../pages/Admin/AdminUsers";
+import AdminUsers from "../components/Admin/UserManagement";
 import FeedbackPage from "../pages/Admin/FeedbackPage";
+import Order from "../components/Client/Order";
+import Orders from "../components/Admin/Orders";
+import OrdersPage from "../pages/Admin/OrdersPage";
+import MyOrders from "../pages/Client/MyOrders";
 
 export default function RoutesList() {
 
@@ -32,6 +36,7 @@ export default function RoutesList() {
             <Route path="/client">
                 <Route index element={<ProtectedRoute><Layout><ClientDashboard /></Layout></ProtectedRoute>} />
                 <Route path="profile" element={<ProtectedRoute><Layout><ProfilePage /></Layout></ProtectedRoute>} />
+                <Route path="myOrders" element={<ProtectedRoute><Layout><MyOrders /></Layout></ProtectedRoute>}/>
             </Route>
 
             {/* Admin Routes */}
@@ -43,6 +48,8 @@ export default function RoutesList() {
                 <Route path="users" element={<AdminUsers />} />
                 <Route path="feedback" element={<FeedbackPage />} />
             </Route>
+            
+            <Route path="/orders" element={<ProtectedRoute><Layout><OrdersPage /></Layout></ProtectedRoute>} />
             
             {/* Seller Routes */}
             <Route path="/seller/:sellerId?" element={<ProtectedRoute><SellerPage /></ProtectedRoute>} />

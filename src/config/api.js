@@ -24,6 +24,10 @@ export const API_ENDPOINTS = {
     CATEGORIES: {
         GET_ALL: "/categories",
     },
+    ORDERS: {
+        GET_ONE: "/orders/:userId",
+        GET_ALL:"/orders",
+    }
 };
 
 export const api = axios.create({
