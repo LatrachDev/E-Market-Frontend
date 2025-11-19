@@ -35,7 +35,15 @@ export default function Login() {
         console.log('user stored successfully');
       }
 
-      navigate('/client');
+      if (response.data?.data?.user?.role === "admin") {
+        navigate('/admin');
+      } else if (response.data?.data?.user?.role === "user") {
+        navigate('/client');
+      } else if (response.data?.data?.user?.role === "seller") {
+        const sellerId = response.data?.data?.user?._id || response.data?.data?.user?.id;
+        navigate(`/seller/${sellerId}`);
+      }
+
     } catch (error) {
       setError(error.response?.data?.message || "Login failed. Please try again.");
     }

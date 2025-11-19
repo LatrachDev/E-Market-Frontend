@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useParams } from 'react-router-dom';
 import SellerSidebar from '../../components/Seller/Layouts/SellerSidebar';
 import MyProducts from '../../components/Seller/MyProducts';
 import Orders from '../../components/Seller/Orders';
@@ -31,6 +32,7 @@ const sectionHeaders = {
 };
 
 function SellerPage() {
+  const { sellerId } = useParams();
   const [activeSection, setActiveSection] = useState('overview');
 
   const currentHeader = sectionHeaders[activeSection];
@@ -38,7 +40,7 @@ function SellerPage() {
   const renderSection = () => {
     switch (activeSection) {
       case 'my-products':
-        return <MyProducts />;
+        return <MyProducts sellerId={sellerId} />;
 
       case 'orders':
         return <Orders />;

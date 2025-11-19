@@ -10,6 +10,12 @@ import AdminDashboard from "../pages/Admin/AdminDashboard";
 import SellerPage from "../pages/Seller/SellerPage";
 import Layout from "../components/Layouts/Layout";
 import ProfilePage from "../pages/Client/ProfilePage";
+import AdminOverview from "../pages/Admin/AdminOverview";
+import AdminReports from "../pages/Admin/AdminReports";
+import AdminProducts from "../pages/Admin/AdminProducts";
+import AdminCategories from "../pages/Admin/AdminCategories";
+import AdminUsers from "../pages/Admin/AdminUsers";
+import FeedbackPage from "../pages/Admin/FeedbackPage";
 
 export default function RoutesList() {
 
@@ -29,10 +35,17 @@ export default function RoutesList() {
             </Route>
 
             {/* Admin Routes */}
-            <Route path="/admin" element={<ProtectedRoute><AdminDashboard /></ProtectedRoute>} />
+            <Route path="/admin" element={<ProtectedRoute><AdminDashboard /></ProtectedRoute>}>
+                <Route index element={<AdminOverview />} />
+                <Route path="reports" element={<AdminReports />} />
+                <Route path="products" element={<AdminProducts />} />
+                <Route path="categories" element={<AdminCategories />} />
+                <Route path="users" element={<AdminUsers />} />
+                <Route path="feedback" element={<FeedbackPage />} />
+            </Route>
             
             {/* Seller Routes */}
-            <Route path="/seller" element={<ProtectedRoute><SellerPage /></ProtectedRoute>} />
+            <Route path="/seller/:sellerId?" element={<ProtectedRoute><SellerPage /></ProtectedRoute>} />
             
             {/* Error Routes */}
             <Route path={'*'} element={<NotFound />} />
