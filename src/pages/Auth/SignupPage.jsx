@@ -47,36 +47,34 @@ export default function SignupPage() {
   }, []);
 
   const onSubmit = async (data) => {
-    try {
-      const response = await api.post(API_ENDPOINTS.AUTH.SIGNUP, {
-        fullname: formData.fullname,
-        email: formData.email,
-        password: formData.password
-      });
+  try {
+    const response = await api.post(API_ENDPOINTS.AUTH.SIGNUP, {
+      fullname: data.fullname,
+      email: data.email,
+      password: data.password
+    });
 
-      console.log('response: ', response);
-      
+    toast.success("Compte créé avec succès !");
 
-      dispatch(setCredentials({
+    dispatch(setCredentials({
       token: response.data.data.token,
       user: response.data.data.user,
     }));
-    console.log(store.getState());
-    
 
-      if (response.data?.data?.token) {
-        localStorage.setItem("token", response.data.data.token);
-      }
-      if (response.data?.data?.user) {
-        localStorage.setItem("user", JSON.stringify(response.data.data.user));
-      }
-
-      setTimeout(() => navigate("/client"), 1000);
-    } catch (error) {
-      const msg = error.response?.data?.message || "Erreur lors de l'inscription.";
-      toast.error(msg);
+    if (response.data?.data?.token) {
+      localStorage.setItem("token", response.data.data.token);
     }
-  };
+    if (response.data?.data?.user) {
+      localStorage.setItem("user", JSON.stringify(response.data.data.user));
+    }
+
+    setTimeout(() => navigate("/client"), 1000);
+
+  } catch (error) {
+    const msg = error.response?.data?.message || "Erreur lors de l'inscription.";
+    toast.error(msg);
+  }
+};
 
   return (
     <>
