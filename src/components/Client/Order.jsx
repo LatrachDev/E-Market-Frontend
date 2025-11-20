@@ -70,8 +70,7 @@ export default function OrdersPage() {
 
                   {/* ACTION */}
                   <td className="px-6 py-4 text-center">
-                    <button
-                      onClick={() => updateOrderStatus(order._id)}
+                    <button onClick={() => updateOrderStatus({id: order._id,newStatus: "cancelled"})}
                       className="px-5 py-2 rounded-xl bg-brandRed text-white font-semibold hover:bg-hoverBrandRed transition shadow-sm"
                     >
                       Update Status

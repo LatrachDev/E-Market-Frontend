@@ -21,16 +21,16 @@ export const fetchOrders = createAsyncThunk(
 
 export const updateStatusOrder = createAsyncThunk(
   "orders/updateStatusOrder",
-  async ({ id, status }, { rejectWithValue }) => {
+  async ({ id, newStatus }, { rejectWithValue }) => {
     try {
-      const res = await api.patch(`/orders/${id}/status`, { status });
+      const res = await api.patch(`/orders/${id}/status`, { newStatus });
       return res.data.data;
-    }
-    catch (err) {
+    } catch (err) {
       return rejectWithValue(err.response?.data?.message || err.message);
     }
   }
 );
+
 export const deletOrder =createAsyncThunk(
   "orders/deleteOrder",
   async (id, { rejectWithValue }) => {
@@ -113,6 +113,22 @@ const ordersSlice = createSlice({
         state.loading = false;
         state.error = action.payload;
       })
+      // update status order
+      .addCase(updateStatusOrder.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(updateStatusOrder.fulfilled, (state, action) => {
+        state.loading = false;
+        const index = state.orders.findIndex(order => order._id === action.payload._id);
+        if (index !== -1) {
+          state.orders[index] = action.payload;
+        }
+      })
+      .addCase(updateStatusOrder.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      })
+
 
       // FETCH ORDERS ADMIN
       .addCase(fetchOrdersAdmin.pending, (state) => {

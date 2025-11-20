@@ -41,9 +41,9 @@ const loadOrdersUser = () => {
   const deleteOrder = (orderId) => {
     dispatch(deletOrder(orderId));
   }
-  const updateOrderStatus = (orderId, status) => {
-    dispatch(updateStatusOrder({ id: orderId, status }));
-  }
+ const updateOrderStatus = ({ id, newStatus }) => {
+  dispatch(updateStatusOrder({ id, newStatus }));
+};
   const restorOrder = (orderId) => {
     dispatch(restoreOrder(orderId));
   };
