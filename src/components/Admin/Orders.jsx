@@ -8,7 +8,6 @@ export default function OrdersPage() {
     error,
     loadOrdersAdmin,
     deleteOrder,
-    updateOrderStatus,
   } = useOrders();
 
   useEffect(() => {
@@ -123,12 +122,7 @@ export default function OrdersPage() {
                       Delete
                     </button>
 
-                    <button
-                      onClick={() => updateOrderStatus(order._id)}
-                      className="px-4 py-2 rounded-xl bg-brandRed text-white font-semibold hover:bg-hoverBrandRed transition"
-                    >
-                      Update
-                    </button>
+                    
                   </td>
                 </tr>
               ))}
