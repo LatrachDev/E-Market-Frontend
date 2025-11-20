@@ -25,6 +25,8 @@ const loadOrdersAdmin = () => {
 };
 
 const loadOrdersUser = () => {
+  console.log("loading order use");
+  
   dispatch(fetchOrders(userId));
 }
   

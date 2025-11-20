@@ -4,8 +4,14 @@ import { api } from "../config/api";
 export const fetchOrders = createAsyncThunk(
   "orders/fetchOrders",
   async (userId, { rejectWithValue }) => {
+    
     try {
-      const res = await api.get(`/orders/${userId}`);
+      const user = JSON.parse(localStorage.getItem('user'));
+      // console.log("Fetching orders for userId =", userId ? userId : user.id);
+      
+      const res = await api.get(`/orders/${userId ? userId : user.id}`);
+      console.log(userId);
+      
       return res.data.data;
     } catch (err) {
       return rejectWithValue(err.response?.data?.message || err.message);
