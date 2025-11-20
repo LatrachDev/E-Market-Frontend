@@ -1,5 +1,6 @@
 import React, { Suspense, lazy } from "react";
 import { useSellerStats } from "../../hooks/useUsers";
+import {BarChart, Bar, XAxis, YAxis, Tooltip, CartesianGrid, ResponsiveContainer, LineChart, Line} from "recharts";
 
 const SellerStatsCard = ({ title, value }) => (
 
@@ -44,7 +45,45 @@ return (
   <div className="space-y-4">  
     <h2 className="text-2xl font-semibold font-playfair text-gray-900">Top Products</h2>  
     <SellerTopProducts topProducts={data.topProducts} />  
-  </div>  
+  </div>
+  <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mt-10">
+
+  {/* Bar Chart - Quantity Sold */}
+  <div className="rounded-xl border border-brandRed/10 bg-white p-6 shadow-sm">
+    <h3 className="text-xl font-playfair font-semibold mb-4 text-gray-800">
+      Quantity Sold (Top Products)
+    </h3>
+
+    <ResponsiveContainer width="100%" height={300}>
+      <BarChart data={data.topProducts}>
+        <CartesianGrid strokeDasharray="3 3" />
+        <XAxis dataKey="title" />
+        <YAxis />
+        <Tooltip />
+        <Bar dataKey="quantitySold" fill="#e63946" radius={[5, 5, 0, 0]} />
+      </BarChart>
+    </ResponsiveContainer>
+  </div>
+
+  {/* Line Chart - Revenue */}
+  <div className="rounded-xl border border-brandRed/10 bg-white p-6 shadow-sm">
+    <h3 className="text-xl font-playfair font-semibold mb-4 text-gray-800">
+      Revenue Generated (Top Products)
+    </h3>
+
+    <ResponsiveContainer width="100%" height={300}>
+      <LineChart data={data.topProducts}>
+        <CartesianGrid strokeDasharray="3 3" />
+        <XAxis dataKey="title" />
+        <YAxis />
+        <Tooltip />
+        <Line type="monotone" dataKey="revenue" stroke="#d00000" strokeWidth={3} />
+      </LineChart>
+    </ResponsiveContainer>
+  </div>
+
+</div>
+  
 </div>  
 
 
