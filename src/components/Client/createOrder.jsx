@@ -4,7 +4,8 @@ import { useSelector } from "react-redux";
 
 export default function CreateOrder() {
   const userId = useSelector((state) => state.auth.user?._id);
-  const { addOrder, loading } = useOrders(userId);
+  const { addOrder, loading ,updateOrderStatus,orders} = useOrders(userId);
+  
 
   const [coupon, setCoupon] = useState("");
 
@@ -50,6 +51,11 @@ export default function CreateOrder() {
           </button>
         </form>
       </div>
+         <button onClick={() => updateOrderStatus({id: orders._id,newStatus: "shipped"})}
+                      className="px-5 py-2 rounded-xl bg-brandRed text-white font-semibold hover:bg-hoverBrandRed transition shadow-sm flex justify-center"
+                    >
+                      Checkout
+                    </button>
     </div>
   );
 }
