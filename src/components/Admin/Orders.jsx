@@ -1,5 +1,6 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import useOrders from "../../Hooks/UseOrders";
+import { X } from "lucide-react";
 
 export default function OrdersPage() {
   const {
@@ -10,13 +11,15 @@ export default function OrdersPage() {
     deleteOrder,
   } = useOrders();
 
+  const [selectedOrder, setSelectedOrder] = useState(null);
+
   useEffect(() => {
     loadOrdersAdmin();
   }, []);
 
   if (loading)
     return (
-      <div className="flex items-center justify-center min-h-screen ">
+      <div className="flex items-center justify-center min-h-screen">
         <span className="text-brandRed font-montserrat text-lg animate-pulse">Loading...</span>
       </div>
     );
@@ -29,9 +32,7 @@ export default function OrdersPage() {
     );
 
   return (
-    
-    <div className="min-h-screen bg-linear-to-br  px-6 py-10">
-      
+    <div className="min-h-screen bg-linear-to-br px-6 py-10">
       <div className="max-w-7xl mx-auto">
         <h1 className="text-4xl font-playfair font-bold text-brandRed mb-12 text-center uppercase tracking-wide">
           Orders Management
@@ -89,29 +90,12 @@ export default function OrdersPage() {
                   </td>
 
                   <td className="px-6 py-4">
-                    <details className="cursor-pointer">
-                      <summary className="text-brandRed font-semibold">
-                        View Items
-                      </summary>
-                      <ul className="mt-2 space-y-1 text-sm text-gray-700">
-                        {order.items.map((item) => (
-                          <li
-                            key={item._id}
-                            className="bg-neutral-100 rounded-lg p-2"
-                          >
-                            <p>
-                              <b>Product:</b> {item.productId?.title || "Deleted"}
-                            </p>
-                            <p>
-                              <b>Qty:</b> {item.quantity}
-                            </p>
-                            <p>
-                              <b>Price:</b> {item.price} MAD
-                            </p>
-                          </li>
-                        ))}
-                      </ul>
-                    </details>
+                    <button
+                      onClick={() => setSelectedOrder(order)}
+                      className="text-brandRed font-semibold hover:underline"
+                    >
+                      View Items ({order.items.length})
+                    </button>
                   </td>
 
                   <td className="px-6 py-4 flex items-center justify-center gap-3">
@@ -121,8 +105,6 @@ export default function OrdersPage() {
                     >
                       Delete
                     </button>
-
-                    
                   </td>
                 </tr>
               ))}
@@ -130,6 +112,104 @@ export default function OrdersPage() {
           </table>
         </div>
       </div>
+
+      {/* MODAL */}
+      {selectedOrder && (
+        <div 
+          className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4"
+          onClick={() => setSelectedOrder(null)}
+        >
+          <div 
+            className="bg-white rounded-2xl shadow-2xl max-w-2xl w-full max-h-[80vh] overflow-y-auto"
+            onClick={(e) => e.stopPropagation()}
+          >
+            {/* Modal Header */}
+            <div className="sticky top-0 bg-brandRed text-white px-6 py-4 rounded-t-2xl flex justify-between items-center">
+              <h2 className="text-xl font-bold font-playfair">
+                Order Details - {selectedOrder._id}
+              </h2>
+              <button
+                onClick={() => setSelectedOrder(null)}
+                className="hover:bg-white hover:bg-opacity-20 rounded-full p-1 transition"
+              >
+                <X size={24} />
+              </button>
+            </div>
+
+            {/* Modal Body */}
+            <div className="p-6">
+              {/* Order Info */}
+              <div className="mb-4 pb-4 border-b border-gray-200 space-y-2">
+                <div className="flex justify-between items-center">
+                  <span className="text-sm text-gray-600">Customer:</span>
+                  <span className="font-semibold text-gray-800">
+                    {selectedOrder.userId?.fullname || "Deleted User"}
+                  </span>
+                </div>
+                <div className="flex justify-between items-center">
+                  <span className="text-sm text-gray-600">Email:</span>
+                  <span className="font-semibold text-gray-800">
+                    {selectedOrder.userId?.email || "Unknown Email"}
+                  </span>
+                </div>
+                <div className="flex justify-between items-center">
+                  <span className="text-sm text-gray-600">Status:</span>
+                  <span
+                    className={`px-3 py-1 rounded-full text-xs font-semibold shadow-sm
+                    ${
+                      selectedOrder.status === "completed"
+                        ? "bg-green-100 text-green-700"
+                        : selectedOrder.status === "cancelled"
+                        ? "bg-red-100 text-red-700"
+                        : "bg-yellow-100 text-yellow-700"
+                    }`}
+                  >
+                    {selectedOrder.status}
+                  </span>
+                </div>
+                <div className="flex justify-between items-center">
+                  <span className="text-sm text-gray-600">Total:</span>
+                  <span className="font-bold text-brandRed text-lg">
+                    {selectedOrder.finalAmount} MAD
+                  </span>
+                </div>
+              </div>
+
+              {/* Items List */}
+              <h3 className="font-bold text-gray-800 mb-3 text-lg">Order Items:</h3>
+              <div className="space-y-3">
+                {selectedOrder.items.map((item) => (
+                  <div
+                    key={item._id}
+                    className="p-4 border border-gray-200 rounded-xl bg-[#fef7f5] hover:shadow-md transition"
+                  >
+                    <p className="font-semibold text-gray-800 text-lg mb-2">
+                      {item.productId?.title || "Deleted Product"}
+                    </p>
+                    <div className="flex justify-between items-center text-sm text-gray-600">
+                      <span>Quantity: <strong>{item.quantity}</strong></span>
+                      <span>Price: <strong className="text-brandRed">{item.price} MAD</strong></span>
+                    </div>
+                    <div className="mt-2 text-sm text-gray-700">
+                      Subtotal: <strong>{item.quantity * item.price} MAD</strong>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Modal Footer */}
+            <div className="px-6 py-4 bg-gray-50 rounded-b-2xl">
+              <button
+                onClick={() => setSelectedOrder(null)}
+                className="w-full px-5 py-3 rounded-xl bg-brandRed text-white font-semibold hover:bg-hoverBrandRed transition shadow-sm"
+              >
+                Close
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
