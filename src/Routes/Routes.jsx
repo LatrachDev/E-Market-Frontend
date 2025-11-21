@@ -16,6 +16,7 @@ import AdminProducts from "../pages/Admin/AdminProducts";
 import AdminCategories from "../pages/Admin/AdminCategories";
 import AdminUsers from "../components/Admin/UserManagement";
 import FeedbackPage from "../pages/Admin/FeedbackPage";
+import AdminCoupons from "../pages/Admin/AdminCoupons";
 import Order from "../components/Client/Order";
 import Orders from "../components/Admin/Orders";
 import OrdersPage from "../pages/Admin/OrdersPage";
@@ -50,6 +51,7 @@ export default function RoutesList() {
                 <Route path="categories" element={<AdminCategories />} />
                 <Route path="users" element={<AdminUsers />} />
                 <Route path="feedback" element={<FeedbackPage />} />
+                <Route path="coupons" element={<AdminCoupons />} />
             </Route>
             
             <Route path="/orders" element={<ProtectedRoute><Layout><OrdersPage /></Layout></ProtectedRoute>} />

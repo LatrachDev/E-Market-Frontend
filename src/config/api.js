@@ -28,14 +28,32 @@ export const API_ENDPOINTS = {
         GET_ONE: "/orders/:userId",
         GET_ALL:"/orders",
     }
+    ,
+    COUPONS: {
+        GET_ALL: "/coupons",
+        GET_ONE: (id) => `/coupons/${id}`,
+        CREATE: "/coupons",
+        UPDATE: (id) => `/coupons/${id}`,
+        DELETE: (id) => `/coupons/${id}`,
+        VALIDATE: "/coupons/validate",
+    }
 };
 
 export const api = axios.create({
     baseURL: API_BASE_URL,
     headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${localStorage.getItem('token')}`,
     },
 });
 
-export default API_ENDPOINTS;
+// Ensure the Authorization header uses the latest token from localStorage
+api.interceptors.request.use((config) => {
+    const token = localStorage.getItem('token');
+    if (token) {
+        config.headers = config.headers || {};
+        config.headers.Authorization = `Bearer ${token}`;
+    }
+    return config;
+});
+
+export default API_ENDPOINTS; 
