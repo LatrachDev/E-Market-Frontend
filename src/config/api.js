@@ -39,6 +39,15 @@ export const API_ENDPOINTS = {
         GET_ONE: "/orders/:userId",
         GET_ALL:"/orders",
     }
+    ,
+    COUPONS: {
+        GET_ALL: "/coupons",
+        GET_ONE: (id) => `/coupons/${id}`,
+        CREATE: "/coupons",
+        UPDATE: (id) => `/coupons/${id}`,
+        DELETE: (id) => `/coupons/${id}`,
+        VALIDATE: "/coupons/validate",
+    }
 };
 
 export const api = axios.create({
@@ -58,9 +67,4 @@ api.interceptors.request.use((config) => {
     return config;
 });
 
-export default API_ENDPOINTS;
-
-
-
-
-
+export default API_ENDPOINTS; 

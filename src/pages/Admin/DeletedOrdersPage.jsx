@@ -1,7 +1,7 @@
 import React from "react";
 import OrdersDeleted from "../../components/Admin/OrdersDeleted";
-import AdminSidebar from "../../components/Admin/Layouts/AdminSidebar";
-import adminNavLinks from "../../constants/adminNavLinks";
+import Sidebar from "../../components/Shared/Sidebar";
+import { adminNavLinks } from "../../constants/sidebarLinks";
 
 export default function OrdersPage() {
   return (
@@ -9,12 +9,12 @@ export default function OrdersPage() {
       
       {/* Sidebar */}
       <div className="hidden lg:block">
-        <AdminSidebar navLinks={adminNavLinks} />
+        <Sidebar navLinks={adminNavLinks} />
       </div>
 
       {/* Mobile Sidebar (optional) */}
       <div className="block lg:hidden">
-        <AdminSidebar navLinks={adminNavLinks} />
+        <Sidebar navLinks={adminNavLinks} />
       </div>
 
       {/* Main content */}
