@@ -7,9 +7,10 @@
     "dev": "vite",
     "build": "vite build",
     "lint": "eslint .",
-    "test": "jest --runInBand",
+    "test": "jest",
     "test:watch": "jest --watch",
     "test:coverage": "jest --coverage",
+    "test:ui": "jest --ui",
     "preview": "vite preview"
   },
   "dependencies": {
@@ -29,12 +30,14 @@
     "yup": "^1.7.1"
   },
   "devDependencies": {
+    "@babel/plugin-syntax-import-meta": "^7.10.4",
     "@babel/preset-env": "^7.28.5",
     "@babel/preset-react": "^7.28.5",
     "@eslint/js": "^9.36.0",
     "@tailwindcss/vite": "^4.1.16",
     "@testing-library/jest-dom": "^6.9.1",
     "@testing-library/react": "^16.3.0",
+    "@testing-library/user-event": "^14.6.1",
     "@types/react": "^19.1.16",
     "@types/react-dom": "^19.1.9",
     "@vitejs/plugin-react": "^5.0.4",
@@ -47,7 +50,6 @@
     "jest-environment-jsdom": "^30.2.0",
     "jsdom": "^27.2.0",
     "tailwindcss": "^4.1.16",
-    "vite": "^7.1.7",
-    "vitest": "^4.0.12"
+    "vite": "^7.1.7"
   }
 }

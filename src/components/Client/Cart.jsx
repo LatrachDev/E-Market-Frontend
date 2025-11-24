@@ -1,30 +1,34 @@
 import { useState } from "react";
-import useCart, { useUpdateCartItem, useRemoveCartItem, useClearCart } from "../../hooks/useCart";
+import  {useCart, } from "../../hooks/useCart";
 import ClientNavBar from "../ClientNavBar";
 import { Trash2, ShoppingCart, Plus, Minus } from "lucide-react";
+
+// ikram
+import CreateOrder from "../../components/Client/createOrder";
 
 // Récupération de l'id utilisateur depuis le localStorage
 const userId = localStorage.getItem("user") ? JSON.parse(localStorage.getItem("user")).id : null;
 
 export default function CartPage() {
-  const { data: cart, isLoading, isError } = useCart(userId);
-  const updateCartItem = useUpdateCartItem(userId);
-  const removeCartItem = useRemoveCartItem(userId);
-  const clearCart = useClearCart(userId);
+ 
+  // ikram
+  const [showOrderModal, setShowOrderModal] = useState(false);
 
+
+  const { cart, isLoading, isError , updateCartItem, removeCartItem, clearCart} = useCart(userId);
   const handleQuantityChange = (productId, quantity) => {
     if (quantity < 1) return;
     updateCartItem.mutate({ productId, quantity });
   };
 
   const handleRemove = (productId) => {
-    removeCartItem.mutate(productId);
+    removeCartItem.mutate({productId});
   };
 
   const handleClearCart = () => {
     clearCart.mutate();
   };
-
+const PLACEHOLDER_IMAGE = "https://images.unsplash.com/photo-1620916566398-39f1143ab7be?w=400&h=500&fit=crop";
   if (isLoading) {
     return (
       <div>
@@ -54,7 +58,7 @@ export default function CartPage() {
       </div>
     );
   }
-
+const items = cart?.items || [];
   const total = cart?.items?.reduce((sum, item) => sum + item.productId.price * item.quantity, 0) || 0;
 
   return (
@@ -104,9 +108,9 @@ export default function CartPage() {
           <div className="grid lg:grid-cols-3 gap-6">
             {/* Liste des articles */}
             <div className="lg:col-span-2 space-y-4">
-              {cart.items.map((item) => (
+              {items.map((item) => (
                 <div
-                  key={item.productId._id}
+                  key={item._id}
                   className="bg-white rounded-xl shadow-md p-6 hover:shadow-lg transition-shadow duration-200"
                 >
                   <div className="flex items-center gap-6">
@@ -115,12 +119,12 @@ export default function CartPage() {
                     <img 
                         src={item.productId.primaryImage 
                         ? `${import.meta.env.VITE_BASE_URL}${item.productId.primaryImage}` 
-                        : "/placeholder.png"
+                        :PLACEHOLDER_IMAGE
                         } 
                         alt={item.productId.title}
                         className="w-full h-full object-cover"
                         onError={(e) => {
-                        e.target.src = "/placeholder.png";
+                        e.target.src = "/PLACEHOLDER_IMAGE";
                         }}
                     />
                     </div>
@@ -204,12 +208,21 @@ export default function CartPage() {
                   </div>
                 </div>
 
-                <button
+                {/* <button
                   onClick={() => alert("Passer au checkout...")}
                   className="w-full py-4 bg-gradient-to-r from-blue-600 to-blue-700 text-white rounded-xl font-semibold hover:from-blue-700 hover:to-blue-800 transition-all duration-200 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5"
                 >
                   Valider ma commande
-                </button>
+                </button> */}
+
+                {/* ikram */}
+                <button
+  onClick={() => setShowOrderModal(true)}
+  className="w-full py-4 bg-gradient-to-r from-blue-600 to-blue-700 text-white rounded-xl font-semibold hover:from-blue-700 hover:to-blue-800 transition-all duration-200 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5"
+>
+  Valider ma commande
+</button>
+
 
                 <div className="mt-4 p-4 bg-green-50 rounded-lg">
                   <p className="text-sm text-green-800 font-medium">✓ Paiement sécurisé</p>
@@ -220,6 +233,21 @@ export default function CartPage() {
           </div>
         )}
       </div>
+      {showOrderModal && (
+  <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+    <div className="bg-white rounded-2xl shadow-xl l relative p-0 h-100">
+      <button
+        onClick={() => setShowOrderModal(false)}
+        className="absolute top-3 right-3 text-gray-500 hover:text-gray-800"
+      >
+        ✖
+      </button>
+
+      <CreateOrder />
+    </div>
+  </div>
+)}
+
     </div>
   );
 }
