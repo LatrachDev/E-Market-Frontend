@@ -51,14 +51,15 @@ describe('Authentication & Role-Based Access Control', () => {
   beforeEach(() => {
     // Clear localStorage before each test
     clearLocalStorage();
-    // Mock window.location for navigation tests
-    delete window.location;
-    window.location = { href: '', replace: jest.fn() };
+    // Mock console.error to avoid noise in test output (except for specific error tests)
+    jest.spyOn(console, 'error').mockImplementation(() => {});
   });
 
   afterEach(() => {
     clearLocalStorage();
     jest.clearAllMocks();
+    // Restore console.error after each test
+    console.error.mockRestore();
   });
 
   describe('ProtectedRoute - Unauthenticated Access', () => {
@@ -223,6 +224,10 @@ describe('Authentication & Role-Based Access Control', () => {
 
   describe('ProtectedRoute - Edge Cases', () => {
     it('should handle invalid JSON in localStorage user data', () => {
+      // Restore console.error for this test to verify error handling
+      console.error.mockRestore();
+      const errorSpy = jest.spyOn(console, 'error').mockImplementation(() => {});
+      
       localStorage.setItem('token', 'valid-token');
       localStorage.setItem('user', 'invalid-json');
       
@@ -234,6 +239,12 @@ describe('Authentication & Role-Based Access Control', () => {
       );
 
       expect(screen.queryByText('User Dashboard')).not.toBeInTheDocument();
+      // Verify that error was logged
+      expect(errorSpy).toHaveBeenCalled();
+      
+      errorSpy.mockRestore();
+      // Re-mock for other tests
+      jest.spyOn(console, 'error').mockImplementation(() => {});
     });
 
     it('should handle empty user object', () => {
