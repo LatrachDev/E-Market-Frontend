@@ -14,7 +14,7 @@ export default function CartPage() {
   };
 
   const handleRemove = (productId) => {
-    removeCartItem.mutate(productId);
+    removeCartItem.mutate({productId});
   };
 
   const handleClearCart = () => {
