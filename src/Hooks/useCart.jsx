@@ -10,8 +10,8 @@ const dispatch = useDispatch();
 const queryClient = useQueryClient();
 const cartRedux = useSelector((state) => state.cart);
 
-const basePath = userId ? "/cart" : "/guest-cart";
-const queryKey = ["cart", userId ?? "guest"];
+const basePath = "/cart" ;
+const queryKey = ["cart", userId]; 
 
 // Fetch panier complet
 const fetchCart = async () => {
