@@ -16,8 +16,9 @@ export default function CartPage() {
 
 
   const { cart, isLoading, isError , updateCartItem, removeCartItem, clearCart} = useCart(userId);
-  const handleQuantityChange = (productId, quantity) => {
+  const handleQuantityChange = (productId, quantity, stock) => {
     if (quantity < 1) return;
+    if (quantity >stock) return;
     updateCartItem.mutate({ productId, quantity });
   };
 
@@ -142,7 +143,11 @@ const items = cart?.items || [];
                     {/* Contrôles quantité */}
                     <div className="flex items-center gap-3">
                       <button
-                        onClick={() => handleQuantityChange(item.productId._id, item.quantity - 1)}
+                        onClick={() =>   handleQuantityChange(
+                        item.productId._id,
+                        item.quantity - 1,
+                        item.productId.quantity
+                      )}
                         disabled={item.quantity <= 1}
                         className="w-8 h-8 rounded-lg bg-gray-100 hover:bg-gray-200 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center transition-colors duration-200"
                       >
@@ -153,12 +158,24 @@ const items = cart?.items || [];
                         type="number"
                         value={item.quantity}
                         min="1"
-                        onChange={(e) => handleQuantityChange(item.productId._id, parseInt(e.target.value) || 1)}
+                        max={item.productId.quantity}
+                        onChange={(e) => handleQuantityChange(
+                          item.productId._id,
+                          Math.min(parseInt(e.target.value) || 1, item.productId.quantity),
+                          item.productId.quantity
+                        )}
                         className="w-16 h-10 text-center border-2 border-gray-200 rounded-lg font-semibold focus:border-blue-500 focus:outline-none"
                       />
                       
                       <button
-                        onClick={() => handleQuantityChange(item.productId._id, item.quantity + 1)}
+                         onClick={() =>
+                          handleQuantityChange(
+                            item.productId._id,
+                            item.quantity + 1,
+                            item.productId.quantity
+                          )
+                        }
+                        disabled={item.quantity >= item.productId.quantity}
                         className="w-8 h-8 rounded-lg bg-gray-100 hover:bg-gray-200 flex items-center justify-center transition-colors duration-200"
                       >
                         <Plus className="w-4 h-4 text-gray-600" />
