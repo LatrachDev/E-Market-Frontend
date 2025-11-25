@@ -2,13 +2,15 @@ import { Link } from "react-router-dom";
 import { Package, ShoppingCart, User, LogOut } from "lucide-react";
 import { use, useEffect, useRef, useState } from "react";
 import { useCart } from "../hooks/useCart";
-
+import { useSelector } from "react-redux";
 function ClientNavBar() {
 
   const [open, setOpen] = useState(false);
   const modalRef = useRef(null);
   const userId = localStorage.getItem("user") ? JSON.parse(localStorage.getItem("user")).id : null;
-  const { cart } = useCart(userId);
+  // const { cart } = useCart(userId);  const cart = useSelector((state) => state.cart);
+  const cartItemsCount = cart?.items?.length || 0;
+  
   useEffect(() => {
     function handleClickOutside(event) {
       if (modalRef.current && !modalRef.current.contains(event.target)) {

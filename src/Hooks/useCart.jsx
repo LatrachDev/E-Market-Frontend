@@ -33,19 +33,31 @@ export const useCart = (userId) => {
     const invalidateCart = () => queryClient.invalidateQueries(queryKey);
 
     // --- Add item ---
-    const addToCart = useMutation({
-        mutationFn: ({ productId, quantity }) => api.post(basePath, { productId, quantity }),
-        onSuccess: (res) => {
-            const item = {
-                id: res.data.item.productId._id,
-                productId: res.data.item.productId,
-                quantity: res.data.item.quantity,
-                _id: res.data.item._id,
-            };
-            dispatch(addItem(item));
-            toast.success(res.data.message || "Produit ajouté !");
-        },
-    });
+   const addToCart = useMutation({
+    mutationFn: ({ productId, quantity }) =>
+        api.post(basePath, { productId, quantity }),
+
+    onSuccess: (res, variables) => {
+        const cart = res.data.data;
+
+        // Trouver l'item ajouté ou mis à jour
+        const newItem = cart.items.find(
+            (item) => item.productId === variables.productId
+        );
+
+        if (!newItem) {
+            toast.error("Erreur lors de l'ajout du produit");
+            return;
+        }
+
+        dispatch(addItem(newItem));
+        toast.success(res.data.message || "Produit ajouté !");
+    },
+
+    onError: () => {
+        toast.error("Impossible d'ajouter au panier");
+    }
+});
 
     // --- Update quantity ---
     const updateCartItem = useMutation({
