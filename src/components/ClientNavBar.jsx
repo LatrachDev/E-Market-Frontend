@@ -2,18 +2,22 @@ import { Link } from "react-router-dom";
 import { Package, ShoppingCart, User, LogOut } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { useCart } from "../hooks/useCart";
-import { useSelector } from "react-redux"; // Ajouter ceci
+import { useSelector } from "react-redux";
 
 function ClientNavBar() {
   const [open, setOpen] = useState(false);
   const modalRef = useRef(null);
   
-  // Récupérer le user depuis localStorage
   const user = localStorage.getItem("user") 
     ? JSON.parse(localStorage.getItem("user")) 
     : null;
 
-  // Récupérer le panier depuis Redux (pas depuis le hook useCart)
+  const userId = user?.id || user?._id;
+  
+  // Charger le panier
+  useCart(userId);
+
+  // Récupérer le panier depuis Redux
   const cart = useSelector((state) => state.cart);
   const cartItemsCount = cart?.items?.length || 0;
 
