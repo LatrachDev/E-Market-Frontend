@@ -1,9 +1,25 @@
 import { useState } from "react";
 import { Edit2, Trash2, Save, X } from "lucide-react";
+import { useEffect } from "react";
+import { api } from "../../config/api";
 
 export default function UserTable({ users, onUpdate, onDelete, page, setPage, totalPages }) {
   const [editingId, setEditingId] = useState(null);
   const [selectedRole, setSelectedRole] = useState("");
+  const [roles, setRoles] = useState([]);
+
+  useEffect(() => {
+    async function fetchRoles() {
+      try {
+        const res = await api.get("/users/roles");
+        console.log("les role", res.data);
+        setRoles(res.data.data);
+      } catch (error) {
+        console.error("Erreur lors de la récupération des rôles :", error);
+      }
+    }
+    fetchRoles();
+  }, []);
 
   const handleEditClick = (user) => {
     setEditingId(user._id);
@@ -76,9 +92,9 @@ export default function UserTable({ users, onUpdate, onDelete, page, setPage, to
                       onChange={(e) => setSelectedRole(e.target.value)}
                       className="font-montserrat bg-brandWhite border-2 border-brandRed/20 text-gray-900 rounded-xl px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brandRed focus:border-transparent"
                     >
-                      <option value="user">User</option>
-                      <option value="seller">Seller</option>
-                      <option value="admin">Admin</option>
+                     {roles.map((r) => (
+                    <option key={r.value} value={r.value}>{r.label}</option>
+                  ))}
                     </select>
                   ) : (
                     <div className={`flex items-center gap-2 px-4 py-2 rounded-full ${getRoleBadge(user.role)}`}>
