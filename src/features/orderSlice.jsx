@@ -170,20 +170,20 @@ const ordersSlice = createSlice({
         state.error = action.payload;
       })
 // delet order 
-.addCase(deletOrder.pending, (state) => {
-  state.loading = true;
-})
-  .addCase(deletOrder.fulfilled, (state, action) => {
-        state.loading = false;
-        const deletedId = action.payload?._id ?? action.payload?.id ?? action.payload;
-        if (!deletedId) return; // nothing to remove or unexpected payload
-        if (!Array.isArray(state.orders)) return;
-        state.orders = state.orders.filter(order => order && order._id !== deletedId);
+      .addCase(deletOrder.pending, (state) => {
+        state.loading = true;
       })
-.addCase(deletOrder.rejected, (state, action) => {
-  state.loading = false;
-  state.error = action.payload;
-})
+        .addCase(deletOrder.fulfilled, (state, action) => {
+              state.loading = false;
+              const deletedId = action.payload?._id ?? action.payload?.id ?? action.payload;
+              if (!deletedId) return; // nothing to remove or unexpected payload
+              if (!Array.isArray(state.orders)) return;
+              state.orders = state.orders.filter(order => order && order._id !== deletedId);
+            })
+      .addCase(deletOrder.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      })
 
 // restore order
       .addCase(restoreOrder.pending, (state) => {
