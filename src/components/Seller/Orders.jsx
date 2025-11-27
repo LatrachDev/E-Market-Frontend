@@ -10,6 +10,8 @@ export default function SellerOrdersPage() {
     loadSellerOrders();
   }, []);
 
+  
+
 
   if (loading) return <p className="text-center mt-20">Chargement...</p>;
   if (error) return <p className="text-red-500 text-center">{error}</p>;
