@@ -1,69 +1,96 @@
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import {
+  getOrders,
+  getOrdersAdmin,
+  getSellerOrders,
+  getDeletedOrders,
+  deleteOrder,
+  updateOrderStatus,
+  createOrder,
+  restoreOrder
+} from "../services/orders.service";
 
-import { useDispatch, useSelector } from "react-redux";
-import { fetchOrders, createOrder,fetchOrdersDeleted, fetchOrdersAdmin,deletOrder,updateStatusOrder,restoreOrder,getSellerOrders} from "../features/orderSlice";
-// import { setOrders, setLoading, setError } from "../features/orderSlice";
+// =================== FETCH QUERIES ===================
 
-import { useEffect } from "react";
-
-export default function useOrders(userId) {
-  
-  const dispatch = useDispatch();
-
-  const orders = useSelector((state) => state.orders.orders);
-  const loading = useSelector((state) => state.orders.loading);
-  const error = useSelector((state) => state.orders.error);
-
-  // Charger les commandes du user connecté
-  useEffect(() => {
-    if (userId) {
-      dispatch(fetchOrders(userId));
-    }
-  }, [dispatch, userId]);
-
-const loadOrdersAdmin = () => {
-    dispatch(fetchOrdersAdmin());
+// Client orders
+export const useOrders = (userId) => {
+  return useQuery({
+    queryKey: ["orders", userId],
+    queryFn: () => getOrders(userId),
+  });
 };
 
-const loadOrdersUser = () => {
-  console.log("loading order use");
-  
-  dispatch(fetchOrders(userId));
-}
-  
-  // Créer une commande
-  const addOrder = (orderData) => {
-    dispatch(createOrder(orderData));
-  };
-  const loadDeletedOrders = () => {
-    dispatch(fetchOrdersDeleted());
-  };
-
-  const deleteOrder = (orderId) => {
-    dispatch(deletOrder(orderId));
-  }
- const updateOrderStatus = ({ id, newStatus }) => {
-  dispatch(updateStatusOrder({ id, newStatus }));
+// Admin orders
+export const useAdminOrders = () => {
+  return useQuery({
+    queryKey: ["orders-admin"],
+    queryFn: getOrdersAdmin,
+  });
 };
-  const restorOrder = (orderId) => {
-    dispatch(restoreOrder(orderId));
-  };
 
-  const loadSellerOrders = () => {
-    dispatch(getSellerOrders());
-  };
+// Seller orders
+export const useSellerOrders = () => {
+  return useQuery({
+    queryKey: ["orders-seller"],
+    queryFn: getSellerOrders,
+  });
+};
 
-  return {
-    orders,
-    loading,
-    error,
-    addOrder,
-    loadOrdersAdmin,
-    loadDeletedOrders,
-    loadOrdersUser,
-    deleteOrder,
-    updateOrderStatus,
-    restorOrder, 
-    loadSellerOrders, 
-  };
-}
+// Deleted orders
+export const useDeletedOrders = () => {
+  return useQuery({
+    queryKey: ["orders-deleted"],
+    queryFn: getDeletedOrders,
+  });
+};
 
+// =================== MUTATIONS ===================
+
+// Delete order
+export const useDeleteOrder = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: deleteOrder,
+    onSuccess: () => {
+      queryClient.invalidateQueries(["orders"]);
+    },
+  });
+};
+
+// Update order status
+export const useUpdateStatusOrder = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: updateOrderStatus,
+    onSuccess: () => {
+      queryClient.invalidateQueries(["orders"]);
+    },
+  });
+};
+
+// Create order
+export const useCreateOrder = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: createOrder,
+    onSuccess: () => {
+      queryClient.invalidateQueries(["orders"]);
+    },
+  });
+};
+
+// Restore order
+export const useRestoreOrder = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: restoreOrder,
+    onSuccess: () => {
+      queryClient.invalidateQueries(["orders-deleted"]);
+      queryClient.invalidateQueries(["orders"]);
+    },
+  });
+};
