@@ -1,12 +1,23 @@
 import React, { useEffect } from "react";
-import useOrders from "../../Hooks/UseOrders";
+import { useOrders } from "../../hooks/UseOrders";
 
 export default function OrdersDeleted() {
-  const { orders, loadDeletedOrders, restorOrder } = useOrders();
+  const {
+    deletedOrders,
+    loadingDeleted,
+    errorDeleted,
+    fetchDeletedOrders,       
+    restoreOrder,
+  } = useOrders();
+console.log("deletedOrders from page =", deletedOrders);
 
-  useEffect(() => {
-    loadDeletedOrders();
-  }, []);
+useEffect(() => {
+  fetchDeletedOrders();
+}, []);
+
+
+  if (loadingDeleted) return <p className="text-center mt-20 text-brandRed font-semibold">Loading...</p>;
+  if (errorDeleted) return <p className="text-center mt-20 text-red-600 font-semibold">{error}</p>;
 
   return (
     <div className="min-h-screen p-24">
@@ -29,34 +40,28 @@ export default function OrdersDeleted() {
             </thead>
 
             <tbody>
-              {orders.map((order) => (
+              {deletedOrders.map((order) => (
                 <tr
                   key={order._id}
                   className="border-b border-gray-200 hover:bg-[#fbf4fa] transition-all"
                 >
-                  
-
-                  {/* Creation Date */}
                   <td className="px-6 py-4 text-gray-700">
                     {new Date(order.createdAt).toLocaleString()}
                   </td>
 
-                  {/* Status */}
                   <td className="px-6 py-4">
                     <span className="px-3 py-1 rounded-full text-xs font-semibold shadow-sm bg-red-100 text-red-700">
                       {order.status}
                     </span>
                   </td>
 
-                  {/* Total */}
                   <td className="px-6 py-4 font-bold text-brandRed">
                     {order.finalAmount} MAD
                   </td>
 
-                  {/* Actions */}
                   <td className="px-6 py-4 text-center">
                     <button
-                      onClick={() => restorOrder(order._id)}
+                      onClick={() => restoreOrder.mutate(order._id)}
                       className="px-5 py-2 rounded-xl bg-brandRed text-white font-semibold hover:bg-hoverBrandRed transition shadow-sm"
                     >
                       Restore

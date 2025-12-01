@@ -1,26 +1,26 @@
-// src/hooks/useSellerOrders.js
-import { useDispatch, useSelector } from "react-redux";
-import { useCallback } from "react";
-import { getSellerOrders, updateStatusOrder } from "../features/orderSlice";
+// // src/hooks/useSellerOrders.js
+// import { useDispatch, useSelector } from "react-redux";
+// import { useCallback } from "react";
+// // import { getSellerOrders, updateStatusOrder } from "../features/orderSlice";
 
-export default function useSellerOrders() {
-  const dispatch = useDispatch();
+// export default function useSellerOrders() {
+//   const dispatch = useDispatch();
 
-  const { sellerOrders, loading, error } = useSelector((state) => state.orders);
+//   const { sellerOrders, loading, error } = useSelector((state) => state.orders);
 
-  const loadSellerOrders = useCallback(() => {
-    dispatch(getSellerOrders());
-  }, [dispatch]);
+//   const loadSellerOrders = useCallback(() => {
+//     dispatch(getSellerOrders());
+//   }, [dispatch]);
 
-  const updateOrderStatus = (data) => {
-    dispatch(updateStatusOrder(data));
-  };
+//   const updateOrderStatus = (data) => {
+//     dispatch(updateStatusOrder(data));
+//   };
 
-  return {
-    sellerOrders,
-    loading,
-    error,
-    loadSellerOrders,
-    updateOrderStatus,
-  };
-}
+//   return {
+//     sellerOrders,
+//     loading,
+//     error,
+//     loadSellerOrders,
+//     updateOrderStatus,
+//   };
+// }

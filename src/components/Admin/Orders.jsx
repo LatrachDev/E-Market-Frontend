@@ -1,20 +1,49 @@
 import React, { useEffect, useState } from "react";
-import useOrders from "../../Hooks/UseOrders";
 import { X } from "lucide-react";
+import { useOrders } from "../../hooks/UseOrders";
+
 
 export default function OrdersPage() {
-  const { orders, loading, error, loadOrdersAdmin, deleteOrder } = useOrders();
+ const { 
+    orders, 
+    loading,
+    error,
+    fetchOrdersAdmin, 
+    deleteOrder ,
+     
+  } = useOrders();
 
   const [selectedOrder, setSelectedOrder] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
 
+  // Charger les commandes admin
   useEffect(() => {
-    loadOrdersAdmin();
+    const loadOrders = async () => {
+      setIsLoading(true);
+      await fetchOrdersAdmin();
+      setIsLoading(false);
+    };
+    
+    loadOrders();
   }, []);
+
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <span className="text-brandRed font-montserrat text-lg animate-pulse">
+          Loading...
+        </span>
+      </div>
+    );
+  }
+
 
   if (loading)
     return (
       <div className="flex items-center justify-center min-h-screen">
-        <span className="text-brandRed font-montserrat text-lg animate-pulse">Loading...</span>
+        <span className="text-brandRed font-montserrat text-lg animate-pulse">
+          Loading...
+        </span>
       </div>
     );
 
@@ -26,7 +55,7 @@ export default function OrdersPage() {
     );
 
   return (
-    <div className="min-h-screen bg-linear-to-br px-6 py-10">
+    <div className="min-h-screen bg-linear-to-br px-6 ">
       <div className="max-w-7xl mx-auto">
         <h1 className="text-4xl font-playfair font-bold text-brandRed mb-12 text-center uppercase tracking-wide">
           Orders Management
@@ -48,30 +77,29 @@ export default function OrdersPage() {
 
             <tbody>
               {orders.map((order) => (
+                
                 <tr
-                  key={order.createdAt}
+                  key={order._id}
                   className="border-b border-gray-200 hover:bg-[#fbf4fa] transition-all"
                 >
-                  <td className="px-6 py-4 font-semibold text-gray-800">{order.createdAt}</td>
-
-                  <td className="px-6 py-4">
-                    {order.userId?.fullname || (
-                      <span className="text-gray-400">Deleted User</span>
-                    )}
+                  
+                  <td className="px-6 py-4 font-semibold text-gray-800">
+                    {new Date(order.createdAt).toLocaleDateString()}
                   </td>
 
                   <td className="px-6 py-4">
-                    {order.userId?.email || (
-                      <span className="text-gray-400">Unknown Email</span>
-                    )}
+                    {order.userId?.fullname || <span className="text-gray-400">Deleted User</span>}
+                  </td>
+
+                  <td className="px-6 py-4">
+                    {order.userId?.email || <span className="text-gray-400">Unknown Email</span>}
                   </td>
 
                   <td className="px-6 py-4 font-bold text-brandRed">{order.finalAmount}</td>
 
                   <td className="px-6 py-4">
                     <span
-                      className={`px-3 py-1 rounded-full text-xs font-semibold shadow-sm
-                      ${
+                      className={`px-3 py-1 rounded-full text-xs font-semibold shadow-sm ${
                         order.status === "completed"
                           ? "bg-green-100 text-green-700"
                           : order.status === "cancelled"
@@ -94,7 +122,7 @@ export default function OrdersPage() {
 
                   <td className="px-6 py-4 flex items-center justify-center gap-3">
                     <button
-                      onClick={() => deleteOrder(order._id)}
+                      onClick={() => deleteOrder.mutate(order._id)}
                       className="px-4 py-2 rounded-xl bg-red-100 text-red-700 font-semibold hover:bg-red-200 transition"
                     >
                       Delete
@@ -132,7 +160,6 @@ export default function OrdersPage() {
 
             {/* Modal Body */}
             <div className="p-6">
-              {/* Order Info */}
               <div className="mb-4 pb-4 border-b border-gray-200 space-y-2">
                 <div className="flex justify-between items-center">
                   <span className="text-sm text-gray-600">Customer:</span>
@@ -149,8 +176,7 @@ export default function OrdersPage() {
                 <div className="flex justify-between items-center">
                   <span className="text-sm text-gray-600">Status:</span>
                   <span
-                    className={`px-3 py-1 rounded-full text-xs font-semibold shadow-sm
-                    ${
+                    className={`px-3 py-1 rounded-full text-xs font-semibold shadow-sm ${
                       selectedOrder.status === "completed"
                         ? "bg-green-100 text-green-700"
                         : selectedOrder.status === "cancelled"
@@ -169,7 +195,6 @@ export default function OrdersPage() {
                 </div>
               </div>
 
-              {/* Items List */}
               <h3 className="font-bold text-gray-800 mb-3 text-lg">Order Items:</h3>
               <div className="space-y-3">
                 {selectedOrder.items.map((item) => (
@@ -192,7 +217,6 @@ export default function OrdersPage() {
               </div>
             </div>
 
-            {/* Modal Footer */}
             <div className="px-6 py-4 bg-gray-50 rounded-b-2xl">
               <button
                 onClick={() => setSelectedOrder(null)}
