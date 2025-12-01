@@ -3,7 +3,7 @@ import { useParams } from 'react-router-dom';
 import Sidebar from '../../components/Shared/Sidebar';
 import { sellerNavLinks } from '../../constants/sidebarLinks';
 import MyProducts from '../../components/Seller/MyProducts';
-// import Orders from '../../components/Seller/Orders';
+import Orders from '../../components/Seller/Orders';
 import CouponManagement from '../../components/Seller/CouponManagement';
 import SellerStatsPage from '../../components/Seller/SellerStatsPage';
 
@@ -39,8 +39,8 @@ function SellerPage() {
       case 'my-products':
         return <MyProducts />;
 
-      // case 'orders':
-      //   return <Orders />;
+      case 'orders':
+        return <Orders />;
 
       case 'coupon-management':
         return <CouponManagement />;

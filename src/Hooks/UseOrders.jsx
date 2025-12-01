@@ -247,7 +247,7 @@ useEffect(() => {
     restoreOrder: restoreOrderMutation,
 
      loadingDeleted: deletedOrdersQuery.isLoading,
-  errorDeleted: deletedOrdersQuery.error,
+     errorDeleted: deletedOrdersQuery.error,
 
     fetchOrdersAdmin,
   fetchDeletedOrders: deletedOrdersQuery.refetch,
