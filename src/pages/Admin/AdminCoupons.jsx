@@ -35,14 +35,14 @@ export default function AdminCoupons() {
         status: 'active'
     });
 
-    const openModal = (coupon = null) => {
+    const openModal = useCallback((coupon = null) => {
+        setEditingCoupon(coupon);
         if (coupon) {
-            setEditingCoupon(coupon);
             setFormData({
                 code: coupon.code,
-                value: (coupon.value ?? '').toString(),
-                type: coupon.type ?? 'percentage',
-                minimumPurchase: (coupon.minimumPurchase ?? 0).toString(),
+                value: coupon.value,
+                type: coupon.type,
+                minimumPurchase: coupon.minimumPurchase,
                 startDate: coupon.startDate ? coupon.startDate.split('T')[0] : '',
                 expirationDate: coupon.expirationDate ? coupon.expirationDate.split('T')[0] : '',
                 maxUsage: coupon.maxUsage ? coupon.maxUsage.toString() : '',
@@ -50,18 +50,25 @@ export default function AdminCoupons() {
                 status: coupon.status ?? 'active'
             });
         } else {
-            setEditingCoupon(null);
             setFormData({
-                code: '', value: '', type: 'percentage', minimumPurchase: '0', startDate: '', expirationDate: '', maxUsage: '', maxUsagePerUser: '1', status: 'active'
+                code: '',
+                value: '',
+                type: 'percentage',
+                minimumPurchase: '0',
+                startDate: '',
+                expirationDate: '',
+                maxUsage: '',
+                maxUsagePerUser: '1',
+                status: 'active'
             });
         }
         setIsModalOpen(true);
-    };
+    }, []);
 
-    const closeModal = () => {
+    const closeModal = useCallback(() => {
         setIsModalOpen(false);
         setEditingCoupon(null);
-    };
+    }, []);
 
     const handleInputChange = useCallback((field, value) => {
         setFormData(prev => ({ ...prev, [field]: value }));
@@ -101,14 +108,13 @@ export default function AdminCoupons() {
         }
     };
 
-    const remove = (coupon) => {
-        const id = coupon._id || coupon.id;
+    const handleDelete = useCallback((id) => {
         if (!id) return toast.error('Missing id');
         deleteCoupon.mutate(id, {
             onSuccess: () => toast.success('Deleted'), 
             onError: (err) => toast.error(err?.response?.data?.message || 'Delete failed') 
         });
-    };
+    }, [deleteCoupon]);
 
     return (
         <div className="rounded-3xl border border-brandRed/10 bg-white p-8 shadow-sm">
@@ -152,7 +158,7 @@ export default function AdminCoupons() {
                                     <td className="px-4 py-4">
                                         <div className="flex gap-2">
                                             <button onClick={() => openModal(c)} className="p-2 hover:bg-blue-100 rounded"><Edit size={16} className="text-blue-600" /></button>
-                                            <button onClick={() => remove(c)} className="p-2 hover:bg-red-100 rounded"><Trash2 size={16} className="text-red-600" /></button>
+                                            <button onClick={() => handleDelete(c._id || c.id)} className="p-2 hover:bg-red-100 rounded"><Trash2 size={16} className="text-red-600" /></button>
                                         </div>
                                     </td>
                                 </tr>

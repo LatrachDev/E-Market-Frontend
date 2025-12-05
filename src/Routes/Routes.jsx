@@ -1,5 +1,5 @@
 import { Routes, Route } from "react-router-dom";
-import { lazy, Suspense, memo } from "react";
+import { lazy, Suspense, memo, useMemo } from "react";
 import Layout from "../components/Layout";
 import ProtectedRoute from "./ProtectedRoute";
 
@@ -9,7 +9,7 @@ const ProductDetails = lazy(() => import("../pages/Products/ProductDetails"));
 const LoginPage = lazy(() => import("../pages/Auth/LoginPage"));
 const SignupPage = lazy(() => import("../pages/Auth/SignupPage"));
 const ClientDashboard = lazy(() => import("../pages/Client/ClientDashboard"));
-import SellerPage from "../pages/Seller/SellerPage";
+const SellerPage = lazy(() => import("../pages/Seller/SellerPage"));
 const AdminDashboard = lazy(() => import("../pages/Admin/AdminDashboard"));
 const NotFound = lazy(() => import("../pages/Error/NotFound"));
 const ProfilePage = lazy(() => import("../pages/Client/ProfilePage"));
@@ -40,45 +40,52 @@ const LoadingFallback = memo(() => (
   </div>
 ));
 
-export default function RoutesList() {
+// Mémoïser le composant Routes
+const RoutesList = memo(() => {
+  //Mémoïser les routes pour éviter les re-renders inutiles
+  const routes = useMemo(() => (
+    <Routes>
+      <Route path="/" element={<Layout><IndexPage /></Layout>} />
+      <Route path="/login" element={<LoginPage />} />
+      <Route path="/signup" element={<SignupPage />} />
+      <Route path="/products/:id" element={<ProductDetails />} />
+      <Route path="/cart" element={<Layout><Cart /></Layout>} />
+
+      <Route path="/client">
+        <Route index element={<ProtectedRoute requiredRole="user"><Layout><ClientDashboard /></Layout></ProtectedRoute>} />
+        <Route path="profile" element={<ProtectedRoute requiredRole="user"><Layout><ProfilePage /></Layout></ProtectedRoute>} />
+        <Route path="myOrders" element={<ProtectedRoute requiredRole="user"><Layout><MyOrders /></Layout></ProtectedRoute>}/>
+        <Route path="createOrder" element={<ProtectedRoute requiredRole={"user"}><Layout><CreateOrder /></Layout></ProtectedRoute>}/>
+        <Route path="orders/:id" element={<ProtectedRoute requiredRole={"user"}><Layout><OrderDetails /></Layout></ProtectedRoute>} />
+      </Route>
+
+      {/* Admin Routes */}
+      <Route path="/admin" element={<ProtectedRoute requiredRole="admin"><AdminDashboard /></ProtectedRoute>}>
+        <Route index element={<AdminOverview />} />
+        <Route path="reports" element={<AdminReports />} />
+        <Route path="products" element={<AdminProducts />} />
+        <Route path="products/:id" element={<AdminProductDetails />} />
+        <Route path="categories" element={<AdminCategories />} />
+        <Route path="users" element={<AdminUsers />} />
+        <Route path="feedback" element={<FeedbackPage />} />
+        <Route path="coupons" element={<AdminCoupons />} />
+        <Route path="orders" element={<OrdersPage />} />
+        <Route path="orders/deleted" element={<DeletedOrdersPage />} />
+      </Route>
+
+      {/* Seller Routes */}
+      <Route path="/seller/:sellerId?" element={<ProtectedRoute requiredRole="seller"><SellerPage /></ProtectedRoute>} />
+      
+      {/* Error Routes */}
+      <Route path={'*'} element={<NotFound />} />
+    </Routes>
+  ), []); // Pas de dépendances car la structure de routes est statique
+
   return (
     <Suspense fallback={<LoadingFallback />}>
-      <Routes>
-        <Route path="/" element={<Layout><IndexPage /></Layout>} />
-        {/* <Route path="/products" element={<ProductsPage />} /> */}
-        <Route path="/login" element={<LoginPage />} />
-        <Route path="/signup" element={<SignupPage />} />
-        <Route path="/products/:id" element={<ProductDetails />} />
-        <Route path="/cart" element={<Layout><Cart /></Layout>} />
-
-        <Route path="/client">
-          <Route index element={<ProtectedRoute requiredRole="user"><Layout><ClientDashboard /></Layout></ProtectedRoute>} />
-          <Route path="profile" element={<ProtectedRoute requiredRole="user"><Layout><ProfilePage /></Layout></ProtectedRoute>} />
-          <Route path="myOrders" element={<ProtectedRoute requiredRole="user"><Layout><MyOrders /></Layout></ProtectedRoute>}/>
-          <Route path="createOrder" element={<ProtectedRoute requiredRole={"user"}><Layout><CreateOrder /></Layout></ProtectedRoute>}/>
-          <Route path="orders/:id" element={<ProtectedRoute requiredRole={"user"}><Layout><OrderDetails /></Layout></ProtectedRoute>} />
-        </Route>
-
-        {/* Admin Routes */}
-        <Route path="/admin" element={<ProtectedRoute requiredRole="admin"><AdminDashboard /></ProtectedRoute>}>
-          <Route index element={<AdminOverview />} />
-          <Route path="reports" element={<AdminReports />} />
-          <Route path="products" element={<AdminProducts />} />
-          <Route path="products/:id" element={<AdminProductDetails />} />
-          <Route path="categories" element={<AdminCategories />} />
-          <Route path="users" element={<AdminUsers />} />
-          <Route path="feedback" element={<FeedbackPage />} />
-          <Route path="coupons" element={<AdminCoupons />} />
-          <Route path="orders" element={<OrdersPage />} />
-          <Route path="orders/deleted" element={<DeletedOrdersPage />} />
-        </Route>
-
-        {/* Seller Routes */}
-        <Route path="/seller/:sellerId?" element={<ProtectedRoute requiredRole="seller"><SellerPage /></ProtectedRoute>} />
-        
-        {/* Error Routes */}
-        <Route path={'*'} element={<NotFound />} />
-      </Routes>
+      {routes}
     </Suspense>
   );
-}
+});
+
+export default RoutesList;

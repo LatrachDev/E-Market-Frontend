@@ -1,10 +1,10 @@
 import { Link } from "react-router-dom";
 import { Package, ShoppingCart, User, LogOut } from "lucide-react";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, useCallback, memo } from "react";
 import { useCart } from "../hooks/useCart";
 import { useSelector } from "react-redux";
 
-function ClientNavBar() {
+const ClientNavBar = memo(() => {
   const [open, setOpen] = useState(false);
   const modalRef = useRef(null);
   
@@ -21,14 +21,14 @@ function ClientNavBar() {
   const cart = useSelector((state) => state.cart);
   const cartItemsCount = cart?.items?.length || 0;
 
-  const handleOpen = () => setOpen(!open);
-  const handleClose = () => setOpen(false);
+  const handleOpen = useCallback(() => setOpen(!open), [open]);
+  const handleClose = useCallback(() => setOpen(false), []);
 
-  const handlLogout = () => {
+  const handlLogout = useCallback(() => {
     localStorage.removeItem("token");
     localStorage.removeItem("user");
     window.location.href = "/login";
-  };
+  }, []);
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -124,7 +124,7 @@ function ClientNavBar() {
       </div>
     </header>
   );
-}
+});
 
 export default ClientNavBar;
 
