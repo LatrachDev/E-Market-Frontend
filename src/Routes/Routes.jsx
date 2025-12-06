@@ -26,6 +26,7 @@ import CreateOrder from "../components/Client/createOrder";
 import DeletedOrdersPage from "../pages/Admin/DeletedOrdersPage";
 import Cart from "../components/Client/Cart";
 import OrderDetails from "../components/Client/OrderDetails";
+import LogsPage from "../pages/LogsPage";
 // import OrdersTest from "../components/Admin/OrdersTest";
 
 export default function RoutesList() {
@@ -59,7 +60,7 @@ export default function RoutesList() {
                 <Route path="coupons" element={<AdminCoupons />} />
                 <Route path="orders" element={<OrdersPage />} />
                 <Route path="orders/deleted" element={<DeletedOrdersPage />} />
-                <Route path="/logs" element={<LogsPage />} />
+                <Route path="logs" element={<LogsPage />} />
 
                 {/* <Route path="ordersTest" element={<OrdersTest />} /> */}
             </Route>
