@@ -1,35 +1,31 @@
-import React, { useEffect, useState } from "react";
-import useOrders from "../../Hooks/UseOrders";
-import { X } from "lucide-react";
+import React, { useEffect, useState } from 'react'
+import useOrders from '../../Hooks/UseOrders'
+import { X } from 'lucide-react'
 
 export default function OrdersPage() {
-  const {
-    orders,
-    loading,
-    error,
-    loadOrdersAdmin,
-    deleteOrder,
-  } = useOrders();
+  const { orders, loading, error, loadOrdersAdmin, deleteOrder } = useOrders()
 
-  const [selectedOrder, setSelectedOrder] = useState(null);
+  const [selectedOrder, setSelectedOrder] = useState(null)
 
   useEffect(() => {
-    loadOrdersAdmin();
-  }, []);
+    loadOrdersAdmin()
+  }, [])
 
   if (loading)
     return (
       <div className="flex items-center justify-center min-h-screen">
-        <span className="text-brandRed font-montserrat text-lg animate-pulse">Loading...</span>
+        <span className="text-brandRed font-montserrat text-lg animate-pulse">
+          Loading...
+        </span>
       </div>
-    );
+    )
 
   if (error)
     return (
       <div className="flex items-center justify-center min-h-screen bg-brandWhite">
         <span className="text-red-600 font-montserrat text-lg">{error}</span>
       </div>
-    );
+    )
 
   return (
     <div className="min-h-screen bg-linear-to-br px-6 py-10">
@@ -58,7 +54,9 @@ export default function OrdersPage() {
                   key={order.createdAt}
                   className="border-b border-gray-200 hover:bg-[#fbf4fa] transition-all"
                 >
-                  <td className="px-6 py-4 font-semibold text-gray-800">{order.createdAt}</td>
+                  <td className="px-6 py-4 font-semibold text-gray-800">
+                    {order.createdAt}
+                  </td>
 
                   <td className="px-6 py-4">
                     {order.userId?.fullname || (
@@ -72,17 +70,19 @@ export default function OrdersPage() {
                     )}
                   </td>
 
-                  <td className="px-6 py-4 font-bold text-brandRed">{order.finalAmount}</td>
+                  <td className="px-6 py-4 font-bold text-brandRed">
+                    {order.finalAmount}
+                  </td>
 
                   <td className="px-6 py-4">
                     <span
                       className={`px-3 py-1 rounded-full text-xs font-semibold shadow-sm
                       ${
-                        order.status === "completed"
-                          ? "bg-green-100 text-green-700"
-                          : order.status === "cancelled"
-                          ? "bg-red-100 text-red-700"
-                          : "bg-yellow-100 text-yellow-700"
+                        order.status === 'completed'
+                          ? 'bg-green-100 text-green-700'
+                          : order.status === 'cancelled'
+                            ? 'bg-red-100 text-red-700'
+                            : 'bg-yellow-100 text-yellow-700'
                       }`}
                     >
                       {order.status}
@@ -115,11 +115,11 @@ export default function OrdersPage() {
 
       {/* MODAL */}
       {selectedOrder && (
-        <div 
+        <div
           className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4"
           onClick={() => setSelectedOrder(null)}
         >
-          <div 
+          <div
             className="bg-white rounded-2xl shadow-2xl max-w-2xl w-full max-h-[80vh] overflow-y-auto"
             onClick={(e) => e.stopPropagation()}
           >
@@ -143,13 +143,13 @@ export default function OrdersPage() {
                 <div className="flex justify-between items-center">
                   <span className="text-sm text-gray-600">Customer:</span>
                   <span className="font-semibold text-gray-800">
-                    {selectedOrder.userId?.fullname || "Deleted User"}
+                    {selectedOrder.userId?.fullname || 'Deleted User'}
                   </span>
                 </div>
                 <div className="flex justify-between items-center">
                   <span className="text-sm text-gray-600">Email:</span>
                   <span className="font-semibold text-gray-800">
-                    {selectedOrder.userId?.email || "Unknown Email"}
+                    {selectedOrder.userId?.email || 'Unknown Email'}
                   </span>
                 </div>
                 <div className="flex justify-between items-center">
@@ -157,11 +157,11 @@ export default function OrdersPage() {
                   <span
                     className={`px-3 py-1 rounded-full text-xs font-semibold shadow-sm
                     ${
-                      selectedOrder.status === "completed"
-                        ? "bg-green-100 text-green-700"
-                        : selectedOrder.status === "cancelled"
-                        ? "bg-red-100 text-red-700"
-                        : "bg-yellow-100 text-yellow-700"
+                      selectedOrder.status === 'completed'
+                        ? 'bg-green-100 text-green-700'
+                        : selectedOrder.status === 'cancelled'
+                          ? 'bg-red-100 text-red-700'
+                          : 'bg-yellow-100 text-yellow-700'
                     }`}
                   >
                     {selectedOrder.status}
@@ -176,7 +176,9 @@ export default function OrdersPage() {
               </div>
 
               {/* Items List */}
-              <h3 className="font-bold text-gray-800 mb-3 text-lg">Order Items:</h3>
+              <h3 className="font-bold text-gray-800 mb-3 text-lg">
+                Order Items:
+              </h3>
               <div className="space-y-3">
                 {selectedOrder.items.map((item) => (
                   <div
@@ -184,14 +186,22 @@ export default function OrdersPage() {
                     className="p-4 border border-gray-200 rounded-xl bg-[#fef7f5] hover:shadow-md transition"
                   >
                     <p className="font-semibold text-gray-800 text-lg mb-2">
-                      {item.productId?.title || "Deleted Product"}
+                      {item.productId?.title || 'Deleted Product'}
                     </p>
                     <div className="flex justify-between items-center text-sm text-gray-600">
-                      <span>Quantity: <strong>{item.quantity}</strong></span>
-                      <span>Price: <strong className="text-brandRed">{item.price} MAD</strong></span>
+                      <span>
+                        Quantity: <strong>{item.quantity}</strong>
+                      </span>
+                      <span>
+                        Price:{' '}
+                        <strong className="text-brandRed">
+                          {item.price} MAD
+                        </strong>
+                      </span>
                     </div>
                     <div className="mt-2 text-sm text-gray-700">
-                      Subtotal: <strong>{item.quantity * item.price} MAD</strong>
+                      Subtotal:{' '}
+                      <strong>{item.quantity * item.price} MAD</strong>
                     </div>
                   </div>
                 ))}
@@ -211,5 +221,5 @@ export default function OrdersPage() {
         </div>
       )}
     </div>
-  );
+  )
 }

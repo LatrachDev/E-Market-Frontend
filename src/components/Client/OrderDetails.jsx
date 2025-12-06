@@ -1,33 +1,32 @@
-import { useLocation } from "react-router-dom";
-import useOrders from "../../hooks/UseOrders";
+import { useLocation } from 'react-router-dom'
+import useOrders from '../../hooks/UseOrders'
 
 function OrderDetails() {
-  const location = useLocation();
-  const { updateOrderStatus } = useOrders();
+  const location = useLocation()
+  const { updateOrderStatus } = useOrders()
 
-  const order = location.state?.orders;
+  const order = location.state?.orders
 
   if (!order) {
     return (
       <p className="text-center mt-20 text-brandRed font-semibold">
         Commande introuvable.
       </p>
-    );
+    )
   }
 
   const handleCheckout = async () => {
     try {
-      await updateOrderStatus({ id: order._id, newStatus: "shipped" });
-      alert("Commande expédiée !");
+      await updateOrderStatus({ id: order._id, newStatus: 'shipped' })
+      alert('Commande expédiée !')
     } catch (err) {
-      console.error(err);
+      console.error(err)
     }
-  };
+  }
 
   return (
     <div className="min-h-screen px-6 py-14 bg-[#fbf4fa]">
       <div className="max-w-3xl mx-auto bg-white shadow-xl rounded-3xl border border-brandRed/20 p-10">
-
         {/* TITLE */}
         <h1 className="text-4xl font-playfair font-bold text-brandRed mb-10 text-center uppercase tracking-wide">
           Order Details
@@ -45,8 +44,6 @@ function OrderDetails() {
                 key={item.productId._id}
                 className="flex gap-6 p-4 rounded-2xl border border-brandRed/20 bg-[#fbf4fa]"
               >
-              
-
                 <div className="flex-1">
                   <h3 className="font-semibold text-lg text-gray-800">
                     {item.productId.title}
@@ -62,12 +59,12 @@ function OrderDetails() {
           </div>
 
           {/* BUTTON */}
-          {order.status === "pending" ? (
+          {order.status === 'pending' ? (
             <button
               onClick={handleCheckout}
               className="mt-10 w-full py-3 rounded-xl bg-brandRed text-white font-semibold text-lg shadow-md hover:bg-hoverBrandRed transition"
             >
-              Checkout 
+              Checkout
             </button>
           ) : (
             <p className="mt-10 text-green-600 font-semibold text-center text-lg">
@@ -77,7 +74,7 @@ function OrderDetails() {
         </div>
       </div>
     </div>
-  );
+  )
 }
 
-export default OrderDetails;
+export default OrderDetails

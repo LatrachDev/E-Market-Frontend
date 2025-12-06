@@ -1,55 +1,71 @@
-import { useState, useCallback, memo } from "react";
-import { useUsers, useCreateUser, useUpdateUser, useDeleteUser } from "../../hooks/useUsers";
-import UserForm from "./UserForm";
-import UserTable from "./UserTable";
-import { UserPlus, X } from "lucide-react";
+import { useState, useCallback } from 'react'
+import {
+  useUsers,
+  useCreateUser,
+  useUpdateUser,
+  useDeleteUser,
+} from '../../hooks/useUsers'
+import UserForm from './UserForm'
+import UserTable from './UserTable'
+import { UserPlus, X } from 'lucide-react'
 
 export default function AdminUsers() {
-  const [page, setPage] = useState(1);
-  const { data, isLoading, error } = useUsers(page);
-  const users = data?.users || [];
-  const totalPages = data?.totalPages || 1;
-  const createUser = useCreateUser();
-  const updateUser = useUpdateUser();
-  const deleteUser = useDeleteUser();
-  const [editingUser, setEditingUser] = useState(null);
-  const [showModal, setShowModal] = useState(false);
+  const [page, setPage] = useState(1)
+  const { data, isLoading, error } = useUsers(page)
+  const users = data?.users || []
+  const totalPages = data?.totalPages || 1
+  const createUser = useCreateUser()
+  const updateUser = useUpdateUser()
+  const deleteUser = useDeleteUser()
+  const [editingUser, setEditingUser] = useState(null)
+  const [showModal, setShowModal] = useState(false)
 
-  const handleUpdateRole = useCallback((id, role) => {
-    updateUser.mutate({ id, data: { role } });
-  }, [updateUser]);
+  const handleUpdateRole = useCallback(
+    (id, role) => {
+      updateUser.mutate({ id, data: { role } })
+    },
+    [updateUser]
+  )
 
-  const handleDelete = useCallback((id) => {
-    if (window.confirm("Êtes-vous sûr de vouloir supprimer cet utilisateur ?")) {
-      deleteUser.mutate(id);
-    }
-  }, [deleteUser]);
+  const handleDelete = useCallback(
+    (id) => {
+      if (
+        window.confirm('Êtes-vous sûr de vouloir supprimer cet utilisateur ?')
+      ) {
+        deleteUser.mutate(id)
+      }
+    },
+    [deleteUser]
+  )
 
   const openCreateModal = useCallback(() => {
-    setEditingUser(null);
-    setShowModal(true);
-  }, []);
+    setEditingUser(null)
+    setShowModal(true)
+  }, [])
 
   const closeModal = useCallback(() => {
-    setShowModal(false);
-    setEditingUser(null);
-  }, []);
+    setShowModal(false)
+    setEditingUser(null)
+  }, [])
 
-  const handleSubmit = useCallback(async (data) => {
-    if (editingUser) {
-      await handleUpdateRole(editingUser._id, data.role);
-    } else {
-      createUser.mutate(data);
-    }
-    closeModal();
-  }, [editingUser, handleUpdateRole, createUser, closeModal]);
+  const handleSubmit = useCallback(
+    async (data) => {
+      if (editingUser) {
+        await handleUpdateRole(editingUser._id, data.role)
+      } else {
+        createUser.mutate(data)
+      }
+      closeModal()
+    },
+    [editingUser, handleUpdateRole, createUser, closeModal]
+  )
 
   if (isLoading) {
     return (
       <div className="flex justify-center items-center min-h-screen">
         <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-brandRed"></div>
       </div>
-    );
+    )
   }
 
   if (error) {
@@ -57,7 +73,7 @@ export default function AdminUsers() {
       <div className="flex justify-center items-center min-h-screen">
         <p className="text-red-600 font-montserrat">Erreur : {error.message}</p>
       </div>
-    );
+    )
   }
 
   return (
@@ -66,8 +82,12 @@ export default function AdminUsers() {
         {/* Header */}
         <div className="flex justify-between items-center mb-8">
           <div>
-            <h1 className="font-playfair text-3xl font-bold text-gray-800">Gestion des utilisateurs</h1>
-            <p className="font-montserrat text-gray-600 mt-2">Gérez les utilisateurs et leurs rôles</p>
+            <h1 className="font-playfair text-3xl font-bold text-gray-800">
+              Gestion des utilisateurs
+            </h1>
+            <p className="font-montserrat text-gray-600 mt-2">
+              Gérez les utilisateurs et leurs rôles
+            </p>
           </div>
           <button
             onClick={openCreateModal}
@@ -79,10 +99,10 @@ export default function AdminUsers() {
         </div>
 
         {/* Table */}
-        <UserTable 
-          users={users} 
-          onUpdate={handleUpdateRole} 
-          onDelete={handleDelete} 
+        <UserTable
+          users={users}
+          onUpdate={handleUpdateRole}
+          onDelete={handleDelete}
           page={page}
           setPage={setPage}
           totalPages={totalPages}
@@ -95,7 +115,9 @@ export default function AdminUsers() {
               {/* Header Modal */}
               <div className="flex justify-between items-center p-6 border-b border-gray-200">
                 <h2 className="font-playfair text-2xl font-bold text-gray-800">
-                  {editingUser ? "Modifier l'utilisateur" : "Nouvel utilisateur"}
+                  {editingUser
+                    ? "Modifier l'utilisateur"
+                    : 'Nouvel utilisateur'}
                 </h2>
                 <button
                   onClick={closeModal}
@@ -107,12 +129,16 @@ export default function AdminUsers() {
 
               {/* Form */}
               <div className="p-6">
-                <UserForm onSubmit={handleSubmit} defaultValues={editingUser} onCancel={closeModal} />
+                <UserForm
+                  onSubmit={handleSubmit}
+                  defaultValues={editingUser}
+                  onCancel={closeModal}
+                />
               </div>
             </div>
           </div>
         )}
       </div>
     </div>
-  );
+  )
 }

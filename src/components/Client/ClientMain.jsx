@@ -1,8 +1,8 @@
-import productsBG from "../../assets/Images/productsBG.jpg";
+import productsBG from '../../assets/Images/productsBG.jpg'
 
 export default function ClientMain() {
   return (
-    <div 
+    <div
       className="relative w-full h-screen bg-cover bg-center bg-no-repeat flex items-center justify-center"
       style={{
         backgroundImage: `url(${productsBG})`,
@@ -13,6 +13,5 @@ export default function ClientMain() {
         Discover our products
       </h1>
     </div>
-  );
+  )
 }
-

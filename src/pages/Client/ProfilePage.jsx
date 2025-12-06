@@ -1,139 +1,147 @@
-
-import { useEffect, useState } from "react";
-import { User, Mail, Lock, Edit2, Save, X } from "lucide-react";
-import { ToastContainer, toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
-import API_ENDPOINTS from "../../config/api";
-import { api } from "../../config/api";
+import { useEffect, useState } from 'react'
+import { User, Mail, Lock, Edit2, Save, X } from 'lucide-react'
+import { ToastContainer, toast } from 'react-toastify'
+import 'react-toastify/dist/ReactToastify.css'
+import API_ENDPOINTS from '../../config/api'
+import { api } from '../../config/api'
 
 export default function ProfilePage() {
-  const [user, setUser] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-  const [formError, setFormError] = useState(null);
-  const [isEditing, setIsEditing] = useState(false);
-  const [isSaving, setIsSaving] = useState(false);
+  const [user, setUser] = useState(null)
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState(null)
+  const [formError, setFormError] = useState(null)
+  const [isEditing, setIsEditing] = useState(false)
+  const [isSaving, setIsSaving] = useState(false)
   const [formData, setFormData] = useState({
-    fullname: "",
-    email: "",
-    password: "",
-    confirmPassword: "",
-  });
+    fullname: '',
+    email: '',
+    password: '',
+    confirmPassword: '',
+  })
 
   useEffect(() => {
     const fetchProfile = async () => {
       try {
-        setLoading(true);
-        setError(null);
-        const response = await api.get(API_ENDPOINTS.PROFILE.MYPROFILE);
-        console.log(response);
-        const userData = response.data?.user;
-        setUser(userData);
+        setLoading(true)
+        setError(null)
+        const response = await api.get(API_ENDPOINTS.PROFILE.MYPROFILE)
+        console.log(response)
+        const userData = response.data?.user
+        setUser(userData)
         setFormData({
-          fullname: userData?.fullname || userData?.name || "",
-          email: userData?.email || "",
-          password: "",
-          confirmPassword: "",
-        });
+          fullname: userData?.fullname || userData?.name || '',
+          email: userData?.email || '',
+          password: '',
+          confirmPassword: '',
+        })
       } catch (error) {
-        console.error("Error fetching profile:", error);
-        setError(error.response?.data?.message || "Erreur lors du chargement du profil");
+        console.error('Error fetching profile:', error)
+        setError(
+          error.response?.data?.message || 'Erreur lors du chargement du profil'
+        )
       } finally {
-        setLoading(false);
+        setLoading(false)
       }
-    };
-    fetchProfile();
-  }, []);
+    }
+    fetchProfile()
+  }, [])
 
   const handleInputChange = (e) => {
-    const { name, value } = e.target;
+    const { name, value } = e.target
     setFormData((prev) => ({
       ...prev,
       [name]: value,
-    }));
-  };
+    }))
+  }
 
   const handleEdit = () => {
-    setIsEditing(true);
+    setIsEditing(true)
     setFormData({
-      fullname: user?.fullname || user?.name || "",
-      email: user?.email || "",
-      password: "",
-      confirmPassword: "",
-    });
-  };
+      fullname: user?.fullname || user?.name || '',
+      email: user?.email || '',
+      password: '',
+      confirmPassword: '',
+    })
+  }
 
   const handleCancel = () => {
-    setIsEditing(false);
+    setIsEditing(false)
     setFormData({
-      fullname: user?.fullname || user?.name || "",
-      email: user?.email || "",
-      password: "",
-      confirmPassword: "",
-    });
-    setFormError(null);
-  };
+      fullname: user?.fullname || user?.name || '',
+      email: user?.email || '',
+      password: '',
+      confirmPassword: '',
+    })
+    setFormError(null)
+  }
 
   const handleSave = async () => {
     try {
-      setIsSaving(true);
-      setFormError(null);
+      setIsSaving(true)
+      setFormError(null)
 
       // Validate password if provided
       if (formData.password && formData.password.length < 6) {
-        setFormError("Le mot de passe doit contenir au moins 6 caractères");
-        setIsSaving(false);
-        return;
+        setFormError('Le mot de passe doit contenir au moins 6 caractères')
+        setIsSaving(false)
+        return
       }
 
       if (formData.password && formData.password !== formData.confirmPassword) {
-        setFormError("Les mots de passe ne correspondent pas");
-        setIsSaving(false);
-        return;
+        setFormError('Les mots de passe ne correspondent pas')
+        setIsSaving(false)
+        return
       }
 
       // Prepare update data
       const updateData = {
         fullname: formData.fullname,
         email: formData.email,
-      };
+      }
 
       // Only include password if it's provided
       if (formData.password) {
-        updateData.password = formData.password;
+        updateData.password = formData.password
       }
 
-      const response = await api.put(API_ENDPOINTS.PROFILE.UPDATE_PROFILE, updateData);
-      const updatedUser = response.data?.user || response.data?.data?.user;
-      
-      setUser(updatedUser);
-      setIsEditing(false);
+      const response = await api.put(
+        API_ENDPOINTS.PROFILE.UPDATE_PROFILE,
+        updateData
+      )
+      const updatedUser = response.data?.user || response.data?.data?.user
+
+      setUser(updatedUser)
+      setIsEditing(false)
       setFormData({
-        fullname: updatedUser?.fullname || updatedUser?.name || "",
-        email: updatedUser?.email || "",
-        password: "",
-        confirmPassword: "",
-      });
-      toast.success("Profil mis à jour avec succès !");
+        fullname: updatedUser?.fullname || updatedUser?.name || '',
+        email: updatedUser?.email || '',
+        password: '',
+        confirmPassword: '',
+      })
+      toast.success('Profil mis à jour avec succès !')
     } catch (error) {
-      console.error("Error updating profile:", error);
-      const errorMessage = error.response?.data?.message || "Erreur lors de la mise à jour du profil";
-      setFormError(errorMessage);
-      toast.error(errorMessage);
+      console.error('Error updating profile:', error)
+      const errorMessage =
+        error.response?.data?.message ||
+        'Erreur lors de la mise à jour du profil'
+      setFormError(errorMessage)
+      toast.error(errorMessage)
     } finally {
-      setIsSaving(false);
+      setIsSaving(false)
     }
-  };
+  }
 
   if (loading) {
     return (
       <div className="px-4 sm:px-6 lg:px-8 py-16 bg-brandWhite min-h-screen flex items-center justify-center">
         <div className="text-center">
           <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-brandRed mb-4"></div>
-          <p className="font-montserrat text-lg text-gray-600">Chargement du profil...</p>
+          <p className="font-montserrat text-lg text-gray-600">
+            Chargement du profil...
+          </p>
         </div>
       </div>
-    );
+    )
   }
 
   if (error) {
@@ -141,15 +149,15 @@ export default function ProfilePage() {
       <div className="px-4 sm:px-6 lg:px-8 py-16 bg-brandWhite min-h-screen flex items-center justify-center">
         <div className="text-center">
           <p className="font-montserrat text-lg text-red-600 mb-4">{error}</p>
-          <button 
-            onClick={() => window.location.reload()} 
+          <button
+            onClick={() => window.location.reload()}
             className="px-6 py-2 bg-brandRed text-white rounded-md hover:bg-hoverBrandRed transition-colors duration-300 font-montserrat"
           >
             Réessayer
           </button>
         </div>
       </div>
-    );
+    )
   }
 
   return (
@@ -189,7 +197,9 @@ export default function ProfilePage() {
             {/* Error Message */}
             {formError && (
               <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-md">
-                <p className="font-montserrat text-sm text-red-600">{formError}</p>
+                <p className="font-montserrat text-sm text-red-600">
+                  {formError}
+                </p>
               </div>
             )}
 
@@ -215,7 +225,7 @@ export default function ProfilePage() {
                     />
                   ) : (
                     <p className="font-playfair text-xl font-semibold text-l_black">
-                      {user?.fullname || user?.name || "Non spécifié"}
+                      {user?.fullname || user?.name || 'Non spécifié'}
                     </p>
                   )}
                 </div>
@@ -241,7 +251,7 @@ export default function ProfilePage() {
                     />
                   ) : (
                     <p className="font-montserrat text-lg text-l_black">
-                      {user?.email || "Non spécifié"}
+                      {user?.email || 'Non spécifié'}
                     </p>
                   )}
                 </div>
@@ -301,7 +311,7 @@ export default function ProfilePage() {
                   className="flex items-center gap-2 px-6 py-2 bg-brandRed text-white rounded-md hover:bg-hoverBrandRed transition-colors duration-300 font-montserrat disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   <Save size={18} />
-                  {isSaving ? "Enregistrement..." : "Enregistrer"}
+                  {isSaving ? 'Enregistrement...' : 'Enregistrer'}
                 </button>
                 <button
                   onClick={handleCancel}
@@ -318,5 +328,5 @@ export default function ProfilePage() {
       </div>
       <ToastContainer position="top-right" autoClose={3000} />
     </div>
-  );
+  )
 }

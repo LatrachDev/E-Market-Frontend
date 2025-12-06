@@ -1,20 +1,21 @@
-import React, { useEffect, useState } from "react";
-import useOrders from "../../Hooks/UseOrders";
-import { X } from "lucide-react";
+import React, { useEffect, useState } from 'react'
+import useOrders from '../../Hooks/UseOrders'
+import { X } from 'lucide-react'
 
 export default function OrdersPage() {
-  const user = JSON.parse(localStorage.getItem("user"));
-  const userId = user?.id;
+  const user = JSON.parse(localStorage.getItem('user'))
+  const userId = user?.id
 
-  const { orders, loading, error, loadOrdersUser, updateOrderStatus } = useOrders(userId);
-  const [selectedOrder, setSelectedOrder] = useState(null);
+  const { orders, loading, error, loadOrdersUser, updateOrderStatus } =
+    useOrders(userId)
+  const [selectedOrder, setSelectedOrder] = useState(null)
 
   useEffect(() => {
-    if (userId) loadOrdersUser();
-  }, [userId]);
+    if (userId) loadOrdersUser()
+  }, [userId])
 
-  if (loading) return <p>Chargement...</p>;
-  if (error) return <p className="text-red-500">{error}</p>;
+  if (loading) return <p>Chargement...</p>
+  if (error) return <p className="text-red-500">{error}</p>
 
   return (
     <div className="min-h-screen px-6 py-10">
@@ -44,7 +45,9 @@ export default function OrdersPage() {
                   className="border-b border-gray-200 hover:bg-[#fbf4fa] transition-all"
                 >
                   {/* Created At */}
-                  <td className="px-6 py-4 font-semibold text-gray-800">{new Date(order.createdAt).toLocaleDateString()}</td>
+                  <td className="px-6 py-4 font-semibold text-gray-800">
+                    {new Date(order.createdAt).toLocaleDateString()}
+                  </td>
 
                   {/* Status */}
                   <td className="px-6 py-4">
@@ -70,10 +73,16 @@ export default function OrdersPage() {
 
                   {/* ACTION */}
                   <td className="px-6 py-4 text-center">
-                    <button onClick={() => updateOrderStatus({id: order._id,newStatus: "cancelled"})}
+                    <button
+                      onClick={() =>
+                        updateOrderStatus({
+                          id: order._id,
+                          newStatus: 'cancelled',
+                        })
+                      }
                       className="px-5 py-2 rounded-xl bg-brandRed text-white font-semibold hover:bg-hoverBrandRed transition shadow-sm"
                     >
-                     Cancel
+                      Cancel
                     </button>
                   </td>
                 </tr>
@@ -85,11 +94,11 @@ export default function OrdersPage() {
 
       {/* MODAL */}
       {selectedOrder && (
-        <div 
+        <div
           className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4"
           onClick={() => setSelectedOrder(null)}
         >
-          <div 
+          <div
             className="bg-white rounded-2xl shadow-2xl max-w-2xl w-full max-h-[80vh] overflow-y-auto"
             onClick={(e) => e.stopPropagation()}
           >
@@ -109,13 +118,17 @@ export default function OrdersPage() {
             {/* Modal Body */}
             <div className="p-6">
               <div className="mb-4 pb-4 border-b border-gray-200">
-                <p className="text-sm text-gray-600">Status: 
+                <p className="text-sm text-gray-600">
+                  Status:
                   <span className="ml-2 px-3 py-1 rounded-full text-xs font-semibold bg-red-100 text-red-700">
                     {selectedOrder.status}
                   </span>
                 </p>
                 <p className="text-sm text-gray-600 mt-2">
-                  Total: <span className="font-bold text-brandRed">{selectedOrder.finalAmount} MAD</span>
+                  Total:{' '}
+                  <span className="font-bold text-brandRed">
+                    {selectedOrder.finalAmount} MAD
+                  </span>
                 </p>
               </div>
 
@@ -127,14 +140,22 @@ export default function OrdersPage() {
                     className="p-4 border border-gray-200 rounded-xl bg-[#fef7f5] hover:shadow-md transition"
                   >
                     <p className="font-semibold text-gray-800 text-lg mb-2">
-                      {item.productId?.title || "Produit supprimé"}
+                      {item.productId?.title || 'Produit supprimé'}
                     </p>
                     <div className="flex justify-between items-center text-sm text-gray-600">
-                      <span>Quantity: <strong>{item.quantity}</strong></span>
-                      <span>Price: <strong className="text-brandRed">{item.price} MAD</strong></span>
+                      <span>
+                        Quantity: <strong>{item.quantity}</strong>
+                      </span>
+                      <span>
+                        Price:{' '}
+                        <strong className="text-brandRed">
+                          {item.price} MAD
+                        </strong>
+                      </span>
                     </div>
                     <div className="mt-2 text-sm text-gray-700">
-                      Subtotal: <strong>{item.quantity * item.price} MAD</strong>
+                      Subtotal:{' '}
+                      <strong>{item.quantity * item.price} MAD</strong>
                     </div>
                   </div>
                 ))}
@@ -154,5 +175,5 @@ export default function OrdersPage() {
         </div>
       )}
     </div>
-  );
+  )
 }

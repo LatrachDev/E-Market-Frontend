@@ -1,70 +1,76 @@
-import React, { useEffect, useState } from 'react';
-import { Edit, Trash2, Plus, X } from 'lucide-react';
-import { useDispatch, useSelector } from 'react-redux';
+import React, { useEffect, useState } from 'react'
+import { Edit, Trash2, Plus, X } from 'lucide-react'
+import { useDispatch, useSelector } from 'react-redux'
 import {
   fetchSellerProductsAsync,
   createProductAsync,
   updateProductAsync,
   deleteProductAsync,
-} from '../../features/productSlice';
-import { fetchCategoriesAsync } from '../../features/categorySlice';
+} from '../../features/productSlice'
+import { fetchCategoriesAsync } from '../../features/categorySlice'
 
-const VITE_API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:3001/';
-const PLACEHOLDER_IMAGE = "https://images.unsplash.com/photo-1620916566398-39f1143ab7be?w=400&h=500&fit=crop";
+const VITE_API_BASE_URL =
+  import.meta.env.VITE_API_BASE_URL || 'http://localhost:3001/'
+const PLACEHOLDER_IMAGE =
+  'https://images.unsplash.com/photo-1620916566398-39f1143ab7be?w=400&h=500&fit=crop'
 
 const getImageUrl = (image) => {
-  if (!image) return PLACEHOLDER_IMAGE;
-  return image.startsWith('http') ? image : VITE_API_BASE_URL + image;
-};
+  if (!image) return PLACEHOLDER_IMAGE
+  return image.startsWith('http') ? image : VITE_API_BASE_URL + image
+}
 
 export default function MyProducts() {
-  const dispatch = useDispatch();
-  const { sellerProducts, status, error: productsError } = useSelector((state) => state.products);
-  const { items: categories } = useSelector((state) => state.categories);
-  
-  const [sellerId, setSellerId] = useState(null);
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [editingProduct, setEditingProduct] = useState(null);
+  const dispatch = useDispatch()
+  const {
+    sellerProducts,
+    status,
+    error: productsError,
+  } = useSelector((state) => state.products)
+  const { items: categories } = useSelector((state) => state.categories)
+
+  const [sellerId, setSellerId] = useState(null)
+  const [isModalOpen, setIsModalOpen] = useState(false)
+  const [editingProduct, setEditingProduct] = useState(null)
   const [formData, setFormData] = useState({
     title: '',
     description: '',
     price: '',
     stock: '0',
     categories: [],
-    published: false
-  });
-  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
-  const [productToDelete, setProductToDelete] = useState(null);
-  const [error, setError] = useState('');
-  const [primaryImage, setPrimaryImage] = useState(null);
-  const [secondaryImages, setSecondaryImages] = useState([]);
-  const [imagePreview, setImagePreview] = useState('');
+    published: false,
+  })
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false)
+  const [productToDelete, setProductToDelete] = useState(null)
+  const [error, setError] = useState('')
+  const [primaryImage, setPrimaryImage] = useState(null)
+  const [secondaryImages, setSecondaryImages] = useState([])
+  const [imagePreview, setImagePreview] = useState('')
 
-  const isSaving = status === 'loading';
-  const isDeleting = status === 'loading';
+  const isSaving = status === 'loading'
+  const isDeleting = status === 'loading'
 
   // Fetch seller ID and products
   useEffect(() => {
-    const storedUser = localStorage.getItem('user');
-    if (!storedUser) return;
+    const storedUser = localStorage.getItem('user')
+    if (!storedUser) return
 
     try {
-      const seller = JSON.parse(storedUser);
-      const id = seller?._id || seller?.id;
-      
-      if (!id) return;
-      setSellerId(id);
+      const seller = JSON.parse(storedUser)
+      const id = seller?._id || seller?.id
 
-      dispatch(fetchSellerProductsAsync(id));
+      if (!id) return
+      setSellerId(id)
+
+      dispatch(fetchSellerProductsAsync(id))
     } catch (error) {
-      console.error('Error parsing user data:', error);
+      console.error('Error parsing user data:', error)
     }
-  }, [dispatch]);
+  }, [dispatch])
 
   // Fetch categories
   useEffect(() => {
-    dispatch(fetchCategoriesAsync());
-  }, [dispatch]);
+    dispatch(fetchCategoriesAsync())
+  }, [dispatch])
 
   const resetForm = () => {
     setFormData({
@@ -73,156 +79,167 @@ export default function MyProducts() {
       price: '',
       stock: '0',
       categories: [],
-      published: false
-    });
-    setPrimaryImage(null);
-    setSecondaryImages([]);
-    setImagePreview('');
-    setEditingProduct(null);
-    setError('');
-  };
+      published: false,
+    })
+    setPrimaryImage(null)
+    setSecondaryImages([])
+    setImagePreview('')
+    setEditingProduct(null)
+    setError('')
+  }
 
   const handleOpenModal = (product = null) => {
-    resetForm();
-    
+    resetForm()
+
     if (product) {
-      setEditingProduct(product);
+      setEditingProduct(product)
       setFormData({
         title: product.title || '',
         description: product.description || '',
         price: product.price?.toString() || '',
         stock: product.stock?.toString() || '0',
-        categories: product.categories?.map(cat => cat._id || cat.id || cat) || [],
-        published: product.published || false
-      });
-      setImagePreview(product.primaryImage || '');
+        categories:
+          product.categories?.map((cat) => cat._id || cat.id || cat) || [],
+        published: product.published || false,
+      })
+      setImagePreview(product.primaryImage || '')
     }
-    
-    setIsModalOpen(true);
-  };
+
+    setIsModalOpen(true)
+  }
 
   const handleCloseModal = () => {
-    setIsModalOpen(false);
-    resetForm();
-  };
+    setIsModalOpen(false)
+    resetForm()
+  }
 
   const handleCategoryToggle = (categoryId) => {
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
       categories: prev.categories.includes(categoryId)
-        ? prev.categories.filter(id => id !== categoryId)
-        : [...prev.categories, categoryId]
-    }));
-  };
+        ? prev.categories.filter((id) => id !== categoryId)
+        : [...prev.categories, categoryId],
+    }))
+  }
 
   const handlePrimaryImageChange = (e) => {
-    const file = e.target.files?.[0];
+    const file = e.target.files?.[0]
     if (file) {
-      setPrimaryImage(file);
-      setImagePreview(URL.createObjectURL(file));
+      setPrimaryImage(file)
+      setImagePreview(URL.createObjectURL(file))
     }
-  };
+  }
 
   const handleSecondaryImagesChange = (e) => {
-    const files = Array.from(e.target.files || []);
-    setSecondaryImages(files);
-  };
+    const files = Array.from(e.target.files || [])
+    setSecondaryImages(files)
+  }
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
-    if (isSaving) return;
-    
-    setError('');
+    e.preventDefault()
+    if (isSaving) return
+
+    setError('')
 
     // Validation
     if (!sellerId) {
-      setError('Missing seller information. Please sign in again.');
-      return;
+      setError('Missing seller information. Please sign in again.')
+      return
     }
     if (parseFloat(formData.price) < 0) {
-      setError('Price cannot be negative');
-      return;
+      setError('Price cannot be negative')
+      return
     }
     if (parseInt(formData.stock) < 0) {
-      setError('Stock cannot be negative');
-      return;
+      setError('Stock cannot be negative')
+      return
     }
     if (formData.categories.length === 0) {
-      setError('Please select at least one category');
-      return;
+      setError('Please select at least one category')
+      return
     }
 
     // Build FormData
-    const payload = new FormData();
-    payload.append('title', formData.title);
-    payload.append('description', formData.description);
-    payload.append('price', formData.price);
-    payload.append('stock', formData.stock);
-    payload.append('published', formData.published);
-    payload.append('seller_id', sellerId);
-    
-    formData.categories.forEach(catId => {
-      payload.append('categories[]', catId);
-    });
+    const payload = new FormData()
+    payload.append('title', formData.title)
+    payload.append('description', formData.description)
+    payload.append('price', formData.price)
+    payload.append('stock', formData.stock)
+    payload.append('published', formData.published)
+    payload.append('seller_id', sellerId)
+
+    formData.categories.forEach((catId) => {
+      payload.append('categories[]', catId)
+    })
 
     if (primaryImage) {
-      payload.append('primaryImage', primaryImage);
+      payload.append('primaryImage', primaryImage)
     }
 
-    secondaryImages.forEach(file => {
-      payload.append('secondaryImages', file);
-    });
+    secondaryImages.forEach((file) => {
+      payload.append('secondaryImages', file)
+    })
 
     try {
       if (editingProduct) {
         // Update existing product
-        await dispatch(updateProductAsync({ id: editingProduct._id, productData: payload })).unwrap();
+        await dispatch(
+          updateProductAsync({ id: editingProduct._id, productData: payload })
+        ).unwrap()
         // Refresh seller products after update
-        dispatch(fetchSellerProductsAsync(sellerId));
+        dispatch(fetchSellerProductsAsync(sellerId))
       } else {
         // Create new product
-        await dispatch(createProductAsync(payload)).unwrap();
+        await dispatch(createProductAsync(payload)).unwrap()
         // Refresh seller products after creation
-        dispatch(fetchSellerProductsAsync(sellerId));
+        dispatch(fetchSellerProductsAsync(sellerId))
       }
-      
-      handleCloseModal();
+
+      handleCloseModal()
     } catch (error) {
-      console.error('Failed to save product:', error);
-      setError(error?.message || error?.response?.data?.message || 'Failed to save product. Please try again.');
+      console.error('Failed to save product:', error)
+      setError(
+        error?.message ||
+          error?.response?.data?.message ||
+          'Failed to save product. Please try again.'
+      )
     }
-  };
+  }
 
   const handleOpenDeleteModal = (product) => {
-    setProductToDelete(product);
-    setIsDeleteModalOpen(true);
-    setError('');
-  };
+    setProductToDelete(product)
+    setIsDeleteModalOpen(true)
+    setError('')
+  }
 
   const handleConfirmDelete = async () => {
-    if (!productToDelete?._id || isDeleting) return;
-    
-    setError('');
-    
+    if (!productToDelete?._id || isDeleting) return
+
+    setError('')
+
     try {
-      await dispatch(deleteProductAsync(productToDelete._id)).unwrap();
+      await dispatch(deleteProductAsync(productToDelete._id)).unwrap()
       // Refresh seller products after deletion
       if (sellerId) {
-        dispatch(fetchSellerProductsAsync(sellerId));
+        dispatch(fetchSellerProductsAsync(sellerId))
       }
-      setIsDeleteModalOpen(false);
-      setProductToDelete(null);
+      setIsDeleteModalOpen(false)
+      setProductToDelete(null)
     } catch (error) {
-      console.error('Failed to delete product:', error);
-      setError(error?.message || error?.response?.data?.message || 'Failed to delete product. Please try again.');
+      console.error('Failed to delete product:', error)
+      setError(
+        error?.message ||
+          error?.response?.data?.message ||
+          'Failed to delete product. Please try again.'
+      )
     }
-  };
+  }
 
   const handleCancelDelete = () => {
-    setIsDeleteModalOpen(false);
-    setProductToDelete(null);
-    setError('');
-  };
+    setIsDeleteModalOpen(false)
+    setProductToDelete(null)
+    setError('')
+  }
 
   return (
     <div className="rounded-3xl border border-brandRed/10 bg-white p-8 shadow-sm">
@@ -241,15 +258,20 @@ export default function MyProducts() {
 
       {productsError && (
         <div className="mb-4 p-4 bg-red-50 border border-red-200 rounded-lg">
-          <p className="text-sm text-red-600 font-montserrat">{productsError}</p>
+          <p className="text-sm text-red-600 font-montserrat">
+            {productsError}
+          </p>
         </div>
       )}
 
       {sellerProducts.length === 0 ? (
         <div className="flex flex-col items-center justify-center py-16 text-center text-gray-500 font-montserrat border border-dashed border-brandRed/20 rounded-2xl">
-          <p className="text-lg font-semibold text-gray-700 mb-2">No products yet</p>
+          <p className="text-lg font-semibold text-gray-700 mb-2">
+            No products yet
+          </p>
           <p className="text-sm max-w-md">
-            Once you add products, they will appear here. Use the "Add New Product" button to create your first listing.
+            Once you add products, they will appear here. Use the "Add New
+            Product" button to create your first listing.
           </p>
         </div>
       ) : (
@@ -257,27 +279,46 @@ export default function MyProducts() {
           <table className="w-full">
             <thead>
               <tr className="border-b border-gray-200">
-                <th className="px-4 py-3 text-left text-sm font-semibold font-montserrat text-gray-700">Product</th>
-                <th className="px-4 py-3 text-left text-sm font-semibold font-montserrat text-gray-700">Price</th>
-                <th className="px-4 py-3 text-left text-sm font-semibold font-montserrat text-gray-700">Stock</th>
-                <th className="px-4 py-3 text-left text-sm font-semibold font-montserrat text-gray-700">Status</th>
-                <th className="px-4 py-3 text-left text-sm font-semibold font-montserrat text-gray-700">Actions</th>
+                <th className="px-4 py-3 text-left text-sm font-semibold font-montserrat text-gray-700">
+                  Product
+                </th>
+                <th className="px-4 py-3 text-left text-sm font-semibold font-montserrat text-gray-700">
+                  Price
+                </th>
+                <th className="px-4 py-3 text-left text-sm font-semibold font-montserrat text-gray-700">
+                  Stock
+                </th>
+                <th className="px-4 py-3 text-left text-sm font-semibold font-montserrat text-gray-700">
+                  Status
+                </th>
+                <th className="px-4 py-3 text-left text-sm font-semibold font-montserrat text-gray-700">
+                  Actions
+                </th>
               </tr>
             </thead>
             <tbody>
               {sellerProducts.map((product) => (
-                <tr key={product._id} className="border-b border-gray-100 hover:bg-gray-50 transition-colors">
+                <tr
+                  key={product._id}
+                  className="border-b border-gray-100 hover:bg-gray-50 transition-colors"
+                >
                   <td className="px-4 py-4">
                     <div className="flex items-center gap-3">
                       <img
                         src={getImageUrl(product.primaryImage)}
-                        onError={(e) => { e.target.src = PLACEHOLDER_IMAGE; }}
+                        onError={(e) => {
+                          e.target.src = PLACEHOLDER_IMAGE
+                        }}
                         alt={product.title}
                         className="w-16 h-16 object-cover rounded-lg"
                       />
                       <div>
-                        <p className="font-semibold font-montserrat text-gray-900">{product.title}</p>
-                        <p className="text-sm font-montserrat text-gray-500 line-clamp-1">{product.description}</p>
+                        <p className="font-semibold font-montserrat text-gray-900">
+                          {product.title}
+                        </p>
+                        <p className="text-sm font-montserrat text-gray-500 line-clamp-1">
+                          {product.description}
+                        </p>
                       </div>
                     </div>
                   </td>
@@ -287,12 +328,18 @@ export default function MyProducts() {
                     </span>
                   </td>
                   <td className="px-4 py-4">
-                    <span className="font-montserrat text-gray-700">{product.stock || 0} units</span>
+                    <span className="font-montserrat text-gray-700">
+                      {product.stock || 0} units
+                    </span>
                   </td>
                   <td className="px-4 py-4">
-                    <span className={`px-3 py-1 rounded-full text-xs font-montserrat font-medium ${
-                      product.published ? 'bg-green-100 text-green-700' : 'bg-yellow-100 text-yellow-700'
-                    }`}>
+                    <span
+                      className={`px-3 py-1 rounded-full text-xs font-montserrat font-medium ${
+                        product.published
+                          ? 'bg-green-100 text-green-700'
+                          : 'bg-yellow-100 text-yellow-700'
+                      }`}
+                    >
                       {product.published ? 'Published' : 'Draft'}
                     </span>
                   </td>
@@ -329,7 +376,10 @@ export default function MyProducts() {
               <h3 className="text-2xl font-semibold font-playfair text-gray-900">
                 {editingProduct ? 'Edit Product' : 'Add New Product'}
               </h3>
-              <button onClick={handleCloseModal} className="p-2 hover:bg-gray-100 rounded-lg transition-colors">
+              <button
+                onClick={handleCloseModal}
+                className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
+              >
                 <X size={24} className="text-gray-600" />
               </button>
             </div>
@@ -342,7 +392,9 @@ export default function MyProducts() {
                 <input
                   type="text"
                   value={formData.title}
-                  onChange={(e) => setFormData({ ...formData, title: e.target.value })}
+                  onChange={(e) =>
+                    setFormData({ ...formData, title: e.target.value })
+                  }
                   className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-brandRed font-montserrat"
                   required
                 />
@@ -354,7 +406,9 @@ export default function MyProducts() {
                 </label>
                 <textarea
                   value={formData.description}
-                  onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+                  onChange={(e) =>
+                    setFormData({ ...formData, description: e.target.value })
+                  }
                   className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-brandRed font-montserrat"
                   rows="4"
                   required
@@ -371,7 +425,9 @@ export default function MyProducts() {
                     step="0.01"
                     min="0"
                     value={formData.price}
-                    onChange={(e) => setFormData({ ...formData, price: e.target.value })}
+                    onChange={(e) =>
+                      setFormData({ ...formData, price: e.target.value })
+                    }
                     className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-brandRed font-montserrat"
                     required
                   />
@@ -385,7 +441,9 @@ export default function MyProducts() {
                     type="number"
                     min="0"
                     value={formData.stock}
-                    onChange={(e) => setFormData({ ...formData, stock: e.target.value })}
+                    onChange={(e) =>
+                      setFormData({ ...formData, stock: e.target.value })
+                    }
                     className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-brandRed font-montserrat"
                     required
                   />
@@ -398,18 +456,23 @@ export default function MyProducts() {
                 </label>
                 <div className="grid grid-cols-2 md:grid-cols-3 gap-3 mt-2">
                   {categories.map((category) => {
-                    const categoryId = category._id || category.id;
+                    const categoryId = category._id || category.id
                     return (
-                      <label key={categoryId} className="flex items-center gap-2 cursor-pointer">
+                      <label
+                        key={categoryId}
+                        className="flex items-center gap-2 cursor-pointer"
+                      >
                         <input
                           type="checkbox"
                           checked={formData.categories.includes(categoryId)}
                           onChange={() => handleCategoryToggle(categoryId)}
                           className="w-4 h-4 text-brandRed border-gray-300 rounded focus:ring-brandRed"
                         />
-                        <span className="font-montserrat text-sm text-gray-700">{category.name}</span>
+                        <span className="font-montserrat text-sm text-gray-700">
+                          {category.name}
+                        </span>
                       </label>
-                    );
+                    )
                   })}
                 </div>
               </div>
@@ -429,7 +492,9 @@ export default function MyProducts() {
                     src={imagePreview}
                     alt="Preview"
                     className="mt-2 w-32 h-32 object-cover rounded-lg border border-gray-300"
-                    onError={(e) => { e.target.style.display = 'none'; }}
+                    onError={(e) => {
+                      e.target.style.display = 'none'
+                    }}
                   />
                 )}
               </div>
@@ -457,10 +522,15 @@ export default function MyProducts() {
                   type="checkbox"
                   id="published"
                   checked={formData.published}
-                  onChange={(e) => setFormData({ ...formData, published: e.target.checked })}
+                  onChange={(e) =>
+                    setFormData({ ...formData, published: e.target.checked })
+                  }
                   className="w-4 h-4 text-brandRed border-gray-300 rounded focus:ring-brandRed"
                 />
-                <label htmlFor="published" className="font-montserrat text-sm text-gray-700 cursor-pointer">
+                <label
+                  htmlFor="published"
+                  className="font-montserrat text-sm text-gray-700 cursor-pointer"
+                >
                   Publish this product
                 </label>
               </div>
@@ -483,7 +553,11 @@ export default function MyProducts() {
                   className="px-6 py-2 bg-brandRed text-white rounded-lg hover:bg-hoverBrandRed transition-colors font-montserrat disabled:opacity-60 disabled:cursor-not-allowed"
                   disabled={isSaving}
                 >
-                  {isSaving ? 'Saving...' : editingProduct ? 'Update Product' : 'Create Product'}
+                  {isSaving
+                    ? 'Saving...'
+                    : editingProduct
+                      ? 'Update Product'
+                      : 'Create Product'}
                 </button>
               </div>
             </form>
@@ -495,13 +569,18 @@ export default function MyProducts() {
       {isDeleteModalOpen && (
         <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50 px-4">
           <div className="bg-white rounded-2xl p-6 max-w-md w-full shadow-xl">
-            <h3 className="text-xl font-semibold font-playfair text-gray-900 mb-2">Delete product?</h3>
+            <h3 className="text-xl font-semibold font-playfair text-gray-900 mb-2">
+              Delete product?
+            </h3>
             <p className="text-sm text-gray-600 font-montserrat">
-              "{productToDelete?.title || 'This product'}" will be removed from your catalog. This action cannot be undone.
+              "{productToDelete?.title || 'This product'}" will be removed from
+              your catalog. This action cannot be undone.
             </p>
-            
+
             {error && (
-              <p className="mt-3 text-sm text-red-600 font-montserrat">{error}</p>
+              <p className="mt-3 text-sm text-red-600 font-montserrat">
+                {error}
+              </p>
             )}
 
             <div className="mt-6 flex items-center justify-end gap-3">
@@ -524,5 +603,5 @@ export default function MyProducts() {
         </div>
       )}
     </div>
-  );
+  )
 }

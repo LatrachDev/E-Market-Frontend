@@ -1,25 +1,22 @@
-import React, { useEffect, useState } from "react";
-import useSellerOrders from "../../hooks/useSellerOrders";
-import { X } from "lucide-react";
+import React, { useEffect, useState } from 'react'
+import useSellerOrders from '../../hooks/useSellerOrders'
+import { X } from 'lucide-react'
 
 export default function SellerOrdersPage() {
-  const { sellerOrders, loading, error, loadSellerOrders, updateOrderStatus } = useSellerOrders();
-  const [selectedOrder, setSelectedOrder] = useState(null);
-  
+  const { sellerOrders, loading, error, loadSellerOrders, updateOrderStatus } =
+    useSellerOrders()
+  const [selectedOrder, setSelectedOrder] = useState(null)
+
   useEffect(() => {
-    loadSellerOrders();
-  }, []);
+    loadSellerOrders()
+  }, [])
 
-  
-
-
-  if (loading) return <p className="text-center mt-20">Chargement...</p>;
-  if (error) return <p className="text-red-500 text-center">{error}</p>;
+  if (loading) return <p className="text-center mt-20">Chargement...</p>
+  if (error) return <p className="text-red-500 text-center">{error}</p>
 
   return (
     <div className="min-h-screen px-6 py-10">
       <div className="max-w-6xl mx-auto">
-        
         {/* Title */}
         <h1 className="text-4xl font-playfair font-bold text-brandRed mb-12 text-center uppercase tracking-wide">
           Commandes de vos produits
@@ -77,7 +74,7 @@ export default function SellerOrdersPage() {
                       onClick={() =>
                         updateOrderStatus({
                           id: order._id,
-                          newStatus: "cancelled",
+                          newStatus: 'cancelled',
                         })
                       }
                       className="px-5 py-2 rounded-xl bg-brandRed text-white font-semibold hover:bg-hoverBrandRed transition shadow-sm"
@@ -116,13 +113,13 @@ export default function SellerOrdersPage() {
             <div className="p-6">
               <div className="mb-4 pb-4 border-b border-gray-200">
                 <p className="text-sm text-gray-600">
-                  Status:{" "}
+                  Status:{' '}
                   <span className="ml-2 px-3 py-1 rounded-full text-xs font-semibold bg-red-100 text-red-700">
                     {selectedOrder.status}
                   </span>
                 </p>
                 <p className="text-sm text-gray-600 mt-2">
-                  Total:{" "}
+                  Total:{' '}
                   <span className="font-bold text-brandRed">
                     {selectedOrder.finalAmount} MAD
                   </span>
@@ -137,7 +134,7 @@ export default function SellerOrdersPage() {
                     className="p-4 border border-gray-200 rounded-xl bg-[#fef7f5] hover:shadow-md transition"
                   >
                     <p className="font-semibold text-gray-800 text-lg mb-2">
-                      {item.productId?.title || "Produit supprimé"}
+                      {item.productId?.title || 'Produit supprimé'}
                     </p>
 
                     <div className="flex justify-between items-center text-sm text-gray-600">
@@ -145,7 +142,7 @@ export default function SellerOrdersPage() {
                         Quantité : <strong>{item.quantity}</strong>
                       </span>
                       <span>
-                        Prix :{" "}
+                        Prix :{' '}
                         <strong className="text-brandRed">
                           {item.price} MAD
                         </strong>
@@ -153,7 +150,7 @@ export default function SellerOrdersPage() {
                     </div>
 
                     <div className="mt-2 text-sm text-gray-700">
-                      Sous-total :{" "}
+                      Sous-total :{' '}
                       <strong>{item.price * item.quantity} MAD</strong>
                     </div>
                   </div>
@@ -174,5 +171,5 @@ export default function SellerOrdersPage() {
         </div>
       )}
     </div>
-  );
+  )
 }

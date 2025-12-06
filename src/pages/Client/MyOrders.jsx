@@ -1,12 +1,10 @@
-import React from "react";
-import Order from "../../components/Client/Order";
+import React from 'react'
+import Order from '../../components/Client/Order'
 
 export default function OrdersPage() {
   return (
-      
-   
-      <div className=" ">
-        <Order />
-      </div>
-  );
+    <div className=" ">
+      <Order />
+    </div>
+  )
 }

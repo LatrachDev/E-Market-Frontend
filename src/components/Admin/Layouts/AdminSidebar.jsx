@@ -1,7 +1,6 @@
-import React from 'react';
-import Sidebar from '../../Shared/Sidebar';
+import React from 'react'
+import Sidebar from '../../Shared/Sidebar'
 
 export default function AdminSidebar(props) {
-  return <Sidebar {...props} />;
+  return <Sidebar {...props} />
 }
-

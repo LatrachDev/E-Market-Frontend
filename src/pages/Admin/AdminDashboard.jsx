@@ -1,7 +1,7 @@
-import React from 'react';
-import { Outlet } from 'react-router-dom';
-import Sidebar from '../../components/Shared/Sidebar';
-import { adminNavLinks } from '../../constants/sidebarLinks';
+import React from 'react'
+import { Outlet } from 'react-router-dom'
+import Sidebar from '../../components/Shared/Sidebar'
+import { adminNavLinks } from '../../constants/sidebarLinks'
 
 function AdminDashboard() {
   return (
@@ -16,8 +16,7 @@ function AdminDashboard() {
         </main>
       </div>
     </div>
-  );
+  )
 }
 
-export default AdminDashboard;
-
+export default AdminDashboard

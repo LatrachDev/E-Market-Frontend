@@ -1,12 +1,12 @@
-import React, { useEffect } from "react";
-import useOrders from "../../Hooks/UseOrders";
+import React, { useEffect } from 'react'
+import useOrders from '../../Hooks/UseOrders'
 
 export default function OrdersDeleted() {
-  const { orders, loadDeletedOrders, restorOrder } = useOrders();
+  const { orders, loadDeletedOrders, restorOrder } = useOrders()
 
   useEffect(() => {
-    loadDeletedOrders();
-  }, []);
+    loadDeletedOrders()
+  }, [])
 
   return (
     <div className="min-h-screen p-24">
@@ -34,8 +34,6 @@ export default function OrdersDeleted() {
                   key={order._id}
                   className="border-b border-gray-200 hover:bg-[#fbf4fa] transition-all"
                 >
-                  
-
                   {/* Creation Date */}
                   <td className="px-6 py-4 text-gray-700">
                     {new Date(order.createdAt).toLocaleString()}
@@ -69,5 +67,5 @@ export default function OrdersDeleted() {
         </div>
       </div>
     </div>
-  );
+  )
 }

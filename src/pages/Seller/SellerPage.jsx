@@ -1,18 +1,19 @@
-import React, { useState } from 'react';
-import { useParams } from 'react-router-dom';
-import Sidebar from '../../components/Shared/Sidebar';
-import { sellerNavLinks } from '../../constants/sidebarLinks';
-import MyProducts from '../../components/Seller/MyProducts';
-import Orders from '../../components/Seller/Orders';
-import CouponManagement from '../../components/Seller/CouponManagement';
-import SellerStatsPage from '../../components/Seller/SellerStatsPage';
+import React, { useState } from 'react'
+import { useParams } from 'react-router-dom'
+import Sidebar from '../../components/Shared/Sidebar'
+import { sellerNavLinks } from '../../constants/sidebarLinks'
+import MyProducts from '../../components/Seller/MyProducts'
+import Orders from '../../components/Seller/Orders'
+import CouponManagement from '../../components/Seller/CouponManagement'
+import SellerStatsPage from '../../components/Seller/SellerStatsPage'
 
 // navLinks pulled from centralized `sellerNavLinks`
 
 const sectionHeaders = {
   overview: {
     title: 'Seller Dashboard Overview',
-    subtitle: 'Monitor your products, orders, and revenue with real-time insights and quick actions.',
+    subtitle:
+      'Monitor your products, orders, and revenue with real-time insights and quick actions.',
   },
   'my-products': {
     title: 'My Products',
@@ -20,36 +21,37 @@ const sectionHeaders = {
   },
   orders: {
     title: 'Orders',
-    subtitle: 'Track all orders for your products with detailed customer information.',
+    subtitle:
+      'Track all orders for your products with detailed customer information.',
   },
   'coupon-management': {
     title: 'Coupon Management',
     subtitle: 'Create and manage discount coupons for your products.',
   },
-};
+}
 
 function SellerPage() {
-  const { sellerId } = useParams();
-  const [activeSection, setActiveSection] = useState('overview');
+  const { sellerId } = useParams()
+  const [activeSection, setActiveSection] = useState('overview')
 
-  const currentHeader = sectionHeaders[activeSection];
+  const currentHeader = sectionHeaders[activeSection]
 
   const renderSection = () => {
     switch (activeSection) {
       case 'my-products':
-        return <MyProducts />;
+        return <MyProducts />
 
       case 'orders':
-        return <Orders />;
+        return <Orders />
 
       case 'coupon-management':
-        return <CouponManagement />;
+        return <CouponManagement />
 
       case 'overview':
       default:
-        return <SellerStatsPage />;
+        return <SellerStatsPage />
     }
-  };
+  }
 
   return (
     <div className="min-h-screen bg-linear-to-br from-[#fef7f5] via-white to-white">
@@ -71,15 +73,12 @@ function SellerPage() {
               </p>
             </div>
 
-            <section className="space-y-10">
-              {renderSection()}
-            </section>
+            <section className="space-y-10">{renderSection()}</section>
           </div>
         </main>
       </div>
     </div>
-  );
+  )
 }
 
-export default SellerPage;
-
+export default SellerPage

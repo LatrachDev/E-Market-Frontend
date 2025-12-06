@@ -1,5 +1,5 @@
-import React from 'react';
-import HistoryImage from "../../assets/Images/History.png";
+import React from 'react'
+import HistoryImage from '../../assets/Images/History.png'
 
 export default function History() {
   return (
@@ -7,7 +7,7 @@ export default function History() {
       <div className="max-w-7xl mx-auto">
         {/* Section Header */}
         <div className="text-center mb-16">
-          <h1 
+          <h1
             className="font-playfair text-brandRed text-3xl sm:text-4xl lg:text-5xl font-bold"
             style={{ fontFamily: "'Playfair Display', serif" }}
           >
@@ -20,14 +20,15 @@ export default function History() {
           {/* Text Content */}
           <div className="order-2 lg:order-1 flex justify-center items-center p-6 sm:p-8 lg:p-12">
             <div className="max-w-lg">
-              <p 
-                className="text-lg sm:text-xl leading-relaxed text-justify mb-6"
-                
-              >
-                “LunaLuxe is more than a cosmetics destination—it’s a celebration of radiant confidence and timeless elegance. Inspired by the soft glow of the moon, our brand embodies mystery, allure, and the natural beauty that shines from within..”
+              <p className="text-lg sm:text-xl leading-relaxed text-justify mb-6">
+                “LunaLuxe is more than a cosmetics destination—it’s a
+                celebration of radiant confidence and timeless elegance.
+                Inspired by the soft glow of the moon, our brand embodies
+                mystery, allure, and the natural beauty that shines from
+                within..”
               </p>
-              <a 
-                href="login" 
+              <a
+                href="login"
                 className="inline-block font-montserrat text-brandRed hover:text-brandBrown transition-colors duration-300 font-medium underline decoration-2 underline-offset-4 hover:decoration-brandBrown"
               >
                 En savoir plus
@@ -38,12 +39,12 @@ export default function History() {
           {/* Image Content */}
           <div className="order-1 lg:order-2 flex justify-center items-center p-4 sm:p-6 lg:p-8">
             <div className="relative w-full max-w-md lg:max-w-lg">
-              <img 
-                src={HistoryImage} 
+              <img
+                src={HistoryImage}
                 alt="Beautiful Asian woman with perfect skin"
                 className="w-full h-auto rounded-lg shadow-lg hover:shadow-xl transition-shadow duration-300"
               />
-              
+
               {/* Decorative Elements */}
               <div className="absolute -top-4 -right-4 w-8 h-8 bg-brandRed/20 rounded-full"></div>
               <div className="absolute -bottom-4 -left-4 w-6 h-6 bg-brandRed/30 rounded-full"></div>
@@ -57,5 +58,5 @@ export default function History() {
         </div>
       </div>
     </div>
-  );
+  )
 }

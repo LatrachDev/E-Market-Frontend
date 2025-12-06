@@ -1,41 +1,38 @@
-import React, { useState } from "react";
-import useOrders from "../../hooks/UseOrders";
-import { useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom";
-import { useDispatch } from "react-redux";
-import { createOrder } from "../../features/orderSlice";
-
+import React, { useState } from 'react'
+import useOrders from '../../hooks/UseOrders'
+import { useSelector } from 'react-redux'
+import { useNavigate } from 'react-router-dom'
+import { useDispatch } from 'react-redux'
+import { createOrder } from '../../features/orderSlice'
 
 export default function CreateOrder() {
-      const navigate = useNavigate();
+  const navigate = useNavigate()
 
-  const userId = useSelector((state) => state.auth.user?._id);
-  const { addOrder, loading ,updateOrderStatus,orders} = useOrders(userId);
-  
+  const userId = useSelector((state) => state.auth.user?._id)
+  const { addOrder, loading, updateOrderStatus, orders } = useOrders(userId)
 
-  const [coupon, setCoupon] = useState("");
+  const [coupon, setCoupon] = useState('')
 
- const dispatch = useDispatch();
+  const dispatch = useDispatch()
 
-const handleSubmit = async (e) => {
-  e.preventDefault();
+  const handleSubmit = async (e) => {
+    e.preventDefault()
 
-  try {
-    const order = await dispatch(
-      createOrder({ coupons: coupon ? [coupon] : [] })
-    ).unwrap();
+    try {
+      const order = await dispatch(
+        createOrder({ coupons: coupon ? [coupon] : [] })
+      ).unwrap()
 
-    console.log("ORDER CREATED:", order);
-    navigate(`/client/orders/${order._id}`, { state: { orders: order } }); 
-  } catch (err) {
-    console.error("ERROR CREATE ORDER", err);
+      console.log('ORDER CREATED:', order)
+      navigate(`/client/orders/${order._id}`, { state: { orders: order } })
+    } catch (err) {
+      console.error('ERROR CREATE ORDER', err)
+    }
   }
-};
 
   return (
     <div className="min-h-screen px-6 py-14">
       <div className="max-w-xl mx-auto bg-white shadow-xl rounded-3xl border border-brandRed/20 p-10">
-
         {/* --- Title --- */}
         <h1 className="text-4xl font-playfair font-bold text-brandRed mb-10 text-center uppercase tracking-wide">
           Create Order
@@ -43,7 +40,6 @@ const handleSubmit = async (e) => {
 
         {/* --- Form --- */}
         <form onSubmit={handleSubmit} className="space-y-6">
-          
           {/* Coupon Input */}
           <div className="flex flex-col">
             <label className="text-sm font-semibold text-gray-700 mb-1">
@@ -63,11 +59,10 @@ const handleSubmit = async (e) => {
             type="submit"
             className="w-full py-3 rounded-xl bg-brandRed text-white font-semibold text-lg shadow-md hover:bg-hoverBrandRed transition"
           >
-            {loading ? "Creating..." : "Create Order"}
+            {loading ? 'Creating...' : 'Create Order'}
           </button>
         </form>
       </div>
-       
     </div>
-  );
+  )
 }

@@ -1,14 +1,14 @@
 @import url('./assets/Fonts/fonts.css');
-@import "tailwindcss";
+@import 'tailwindcss';
 
 @theme {
-  --font-playfair: "Playfair Display", serif;
-  --font-montserrat: "Montserrat", sans-serif;
-  
-  --color-brandBrown: #633F3B;
-  --color-brandRed: #B5483A;
+  --font-playfair: 'Playfair Display', serif;
+  --font-montserrat: 'Montserrat', sans-serif;
+
+  --color-brandBrown: #633f3b;
+  --color-brandRed: #b5483a;
   --color-brandSwhite: #f1f1f1;
   --color-brandWhite: #fffaf9;
   --color-l-black: #1f1f1f;
-  --color-hoverBrandRed: #8B2D21;
+  --color-hoverBrandRed: #8b2d21;
 }

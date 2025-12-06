@@ -1,5 +1,5 @@
-import { Link } from "react-router-dom";
-import { Search, ShoppingCart, User } from "lucide-react";
+import { Link } from 'react-router-dom'
+import { Search, ShoppingCart, User } from 'lucide-react'
 
 function ClientNavBar() {
   return (
@@ -18,7 +18,10 @@ function ClientNavBar() {
           className="p-2 rounded-full hover:bg-gray-100 transition-colors duration-300"
           aria-label="Search"
         >
-          <Search size={24} className="w-5 h-5 text-gray-800 hover:text-brandBrown transition-colors" />
+          <Search
+            size={24}
+            className="w-5 h-5 text-gray-800 hover:text-brandBrown transition-colors"
+          />
         </button>
 
         {/* Cart Icon */}
@@ -27,8 +30,11 @@ function ClientNavBar() {
           className="p-2 rounded-full hover:bg-gray-100 transition-colors duration-300 relative"
           aria-label="Shopping Cart"
         >
-          <ShoppingCart size={24} className="w-5 h-5 text-gray-800 hover:text-brandBrown transition-colors" />
-        
+          <ShoppingCart
+            size={24}
+            className="w-5 h-5 text-gray-800 hover:text-brandBrown transition-colors"
+          />
+
           <span className="absolute top-0 -right-3 bg-brandRed text-brandWhite text-xs rounded-full w-5 h-5 flex items-center font-montserrat justify-center">
             0
           </span>
@@ -40,12 +46,14 @@ function ClientNavBar() {
           className="p-2 rounded-full hover:bg-gray-100 transition-colors duration-300"
           aria-label="Profile"
         >
-          <User size={24} className="w-5 h-5 text-gray-800 hover:text-brandBrown transition-colors" />
+          <User
+            size={24}
+            className="w-5 h-5 text-gray-800 hover:text-brandBrown transition-colors"
+          />
         </Link>
       </div>
     </header>
-  );
+  )
 }
 
-export default ClientNavBar;
-
+export default ClientNavBar

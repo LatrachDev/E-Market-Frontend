@@ -1,84 +1,91 @@
-import { useState, useEffect } from "react";
-import { useParams, useNavigate } from "react-router-dom";
-import { ShoppingCart, ArrowLeft, Heart, Share2 } from "lucide-react";
-import API_ENDPOINTS, { api } from "../../config/api";
-import { useCart, } from "../../hooks/useCart";
-import Layout from "../../components/Layout";
+import { useState, useEffect } from 'react'
+import { useParams, useNavigate } from 'react-router-dom'
+import { ShoppingCart, ArrowLeft, Heart, Share2 } from 'lucide-react'
+import API_ENDPOINTS, { api } from '../../config/api'
+import { useCart } from '../../hooks/useCart'
+import Layout from '../../components/Layout'
 
-import { ToastContainer } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+import { ToastContainer } from 'react-toastify'
+import 'react-toastify/dist/ReactToastify.css'
 
-const PLACEHOLDER_IMAGE = "https://images.unsplash.com/photo-1620916566398-39f1143ab7be?w=400&h=500&fit=crop";
+const PLACEHOLDER_IMAGE =
+  'https://images.unsplash.com/photo-1620916566398-39f1143ab7be?w=400&h=500&fit=crop'
 
 export default function ProductDetails() {
-  const { addToCart } = useCart();
-  const { id } = useParams();
-  const [product, setProduct] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-  const [sellerName, setSellerName] = useState(null);
-  const [quantity, setQuantity] = useState(1);
-  const [activeImageIndex, setActiveImageIndex] = useState(0);
-  const navigate = useNavigate();
+  const { addToCart } = useCart()
+  const { id } = useParams()
+  const [product, setProduct] = useState(null)
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState(null)
+  const [sellerName, setSellerName] = useState(null)
+  const [quantity, setQuantity] = useState(1)
+  const [activeImageIndex, setActiveImageIndex] = useState(0)
+  const navigate = useNavigate()
 
-  const apiBaseUrl = import.meta.env.VITE_API_BASE_URL;
+  const apiBaseUrl = import.meta.env.VITE_API_BASE_URL
 
   const buildImageUrl = (path) => {
-    if (!path) return null;
-    if (path.startsWith("http")) return path;
-    return apiBaseUrl ? `${apiBaseUrl}${path}` : path;
-  };
+    if (!path) return null
+    if (path.startsWith('http')) return path
+    return apiBaseUrl ? `${apiBaseUrl}${path}` : path
+  }
 
   useEffect(() => {
     const fetchProduct = async () => {
       try {
-        setLoading(true);
-        setError(null);
-        const response = await api.get(API_ENDPOINTS.PRODUCTS.GET_ONE.replace(':id', id));
-        const productData = response.data?.data || response.data;
-        console.log('productData :', productData);
-        setProduct(productData);
-        setQuantity(1);
-        setActiveImageIndex(0);
+        setLoading(true)
+        setError(null)
+        const response = await api.get(
+          API_ENDPOINTS.PRODUCTS.GET_ONE.replace(':id', id)
+        )
+        const productData = response.data?.data || response.data
+        console.log('productData :', productData)
+        setProduct(productData)
+        setQuantity(1)
+        setActiveImageIndex(0)
       } catch (error) {
-        console.error("Error fetching product", error);
-        setError("Impossible de charger ce produit. Veuillez réessayer plus tard.");
+        console.error('Error fetching product', error)
+        setError(
+          'Impossible de charger ce produit. Veuillez réessayer plus tard.'
+        )
       } finally {
-        setLoading(false);
+        setLoading(false)
       }
-    };
-    if (id){
-      fetchProduct();
     }
-  }, [id]);
+    if (id) {
+      fetchProduct()
+    }
+  }, [id])
 
   // Fetch minimal public seller name if product only has seller_id
   useEffect(() => {
-    if (!product) return;
+    if (!product) return
     // if product already contains seller object with fullname, use it
     if (product.seller && (product.seller.fullname || product.seller.name)) {
-      setSellerName(product.seller.fullname || product.seller.name);
-      return;
+      setSellerName(product.seller.fullname || product.seller.name)
+      return
     }
 
-    const sellerId = product.seller_id || product.sellerId || null;
-    if (!sellerId) return;
+    const sellerId = product.seller_id || product.sellerId || null
+    if (!sellerId) return
 
-    let mounted = true;
+    let mounted = true
     const fetchSellerName = async () => {
       try {
-        const res = await api.get(`/users/public/${sellerId}/username`);
-        const data = res.data?.data || res.data;
-        const name = data?.name || data?.fullname || null;
-        if (mounted) setSellerName(name);
+        const res = await api.get(`/users/public/${sellerId}/username`)
+        const data = res.data?.data || res.data
+        const name = data?.name || data?.fullname || null
+        if (mounted) setSellerName(name)
       } catch (err) {
-        console.error('Failed to fetch public seller name', err);
+        console.error('Failed to fetch public seller name', err)
       }
-    };
+    }
 
-    fetchSellerName();
-    return () => { mounted = false; };
-  }, [product]);
+    fetchSellerName()
+    return () => {
+      mounted = false
+    }
+  }, [product])
 
   const galleryImages = product
     ? [
@@ -87,15 +94,16 @@ export default function ProductDetails() {
           ? product.secondaryImages.map(buildImageUrl)
           : []),
       ].filter(Boolean)
-    : [];
+    : []
 
-  const mainImage = galleryImages[activeImageIndex] || galleryImages[0] || PLACEHOLDER_IMAGE;
+  const mainImage =
+    galleryImages[activeImageIndex] || galleryImages[0] || PLACEHOLDER_IMAGE
 
   const handleAddToCart = () => {
     if (product) {
-      addToCart.mutate({ productId: product._id, quantity });
+      addToCart.mutate({ productId: product._id, quantity })
     }
-  };
+  }
 
   if (loading) {
     return (
@@ -104,7 +112,7 @@ export default function ProductDetails() {
           <p className="font-montserrat text-gray-500">Chargement...</p>
         </div>
       </Layout>
-    );
+    )
   }
 
   if (error) {
@@ -120,30 +128,36 @@ export default function ProductDetails() {
           </button>
         </div>
       </Layout>
-    );
+    )
   }
 
   if (!product) {
-    return null;
+    return null
   }
 
-  const priceValue = typeof product.price === "number" ? product.price.toFixed(2) : product.price;
-  const stockValue = Number(product.stock) || 0;
-  const canDecrease = quantity > 1;
-  const canIncrease = stockValue ? quantity < stockValue : true;
+  const priceValue =
+    typeof product.price === 'number' ? product.price.toFixed(2) : product.price
+  const stockValue = Number(product.stock) || 0
+  const canDecrease = quantity > 1
+  const canIncrease = stockValue ? quantity < stockValue : true
 
-  const categoryNames = Array.isArray(product.categories) 
-  ? product.categories.map((cat) => cat?.name).filter(Boolean) 
-  : [product.category?.name || "Non spécifiée"];
-  
-  console.log('product seller wdakchi... :', product.seller_id); 
+  const categoryNames = Array.isArray(product.categories)
+    ? product.categories.map((cat) => cat?.name).filter(Boolean)
+    : [product.category?.name || 'Non spécifiée']
+
+  console.log('product seller wdakchi... :', product.seller_id)
 
   const productDetails = [
-    { label: "Catégorie", value: categoryNames.length ? categoryNames.join(", ") : "Non spécifiées" },
-    { label: "Vendeur", value: sellerName || product.seller?.fullname || "Non renseigné" },
-  ];
-  
-    
+    {
+      label: 'Catégorie',
+      value: categoryNames.length ? categoryNames.join(', ') : 'Non spécifiées',
+    },
+    {
+      label: 'Vendeur',
+      value: sellerName || product.seller?.fullname || 'Non renseigné',
+    },
+  ]
+
   return (
     <Layout>
       <div className="px-4 sm:px-6 lg:px-8 py-8 bg-brandWhite min-h-screen">
@@ -167,11 +181,10 @@ export default function ProductDetails() {
                   alt={product.title}
                   className="w-full h-full object-cover"
                 />
-                
-                  <div className="absolute top-4 right-4 bg-brandRed text-white px-5 py-1 rounded-md text-sm font-montserrat font-light">
-                    -20%
-                  </div>
-            
+
+                <div className="absolute top-4 right-4 bg-brandRed text-white px-5 py-1 rounded-md text-sm font-montserrat font-light">
+                  -20%
+                </div>
               </div>
             </div>
 
@@ -212,7 +225,10 @@ export default function ProductDetails() {
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
                   {productDetails.map((detail) => (
-                    <div key={detail.label} className="rounded-xl bg-white border border-gray-100 px-4 py-3">
+                    <div
+                      key={detail.label}
+                      className="rounded-xl bg-white border border-gray-100 px-4 py-3"
+                    >
                       <p className="font-montserrat text-xs uppercase tracking-wide text-gray-400">
                         {detail.label}
                       </p>
@@ -226,9 +242,11 @@ export default function ProductDetails() {
                 {/* Stock Information */}
                 <div className="mb-6">
                   <p className="font-montserrat text-sm text-gray-600">
-                    Stock disponible:{" "}
-                    <span className={`font-semibold ${stockValue ? "text-green-600" : "text-red-500"}`}>
-                      {stockValue || "Rupture"}
+                    Stock disponible:{' '}
+                    <span
+                      className={`font-semibold ${stockValue ? 'text-green-600' : 'text-red-500'}`}
+                    >
+                      {stockValue || 'Rupture'}
                     </span>
                   </p>
                 </div>
@@ -242,7 +260,10 @@ export default function ProductDetails() {
                       </label>
                       <div className="flex items-center gap-4">
                         <button
-                          onClick={() => canDecrease && setQuantity((prev) => Math.max(1, prev - 1))}
+                          onClick={() =>
+                            canDecrease &&
+                            setQuantity((prev) => Math.max(1, prev - 1))
+                          }
                           disabled={!canDecrease}
                           className="w-10 h-10 flex items-center justify-center border border-gray-300 rounded-md hover:bg-gray-100 disabled:opacity-50 disabled:cursor-not-allowed transition-colors duration-300 font-montserrat font-semibold"
                         >
@@ -252,7 +273,9 @@ export default function ProductDetails() {
                           {quantity}
                         </span>
                         <button
-                          onClick={() => canIncrease && setQuantity((prev) => prev + 1)}
+                          onClick={() =>
+                            canIncrease && setQuantity((prev) => prev + 1)
+                          }
                           disabled={!canIncrease}
                           className="w-10 h-10 flex items-center justify-center border border-gray-300 rounded-md hover:bg-gray-100 disabled:opacity-50 disabled:cursor-not-allowed transition-colors duration-300 font-montserrat font-semibold"
                         >
@@ -261,9 +284,10 @@ export default function ProductDetails() {
                       </div>
                     </div>
                     <button
-                      onClick={(e) => e.preventDefault()
-                        ? handleAddToCart(product, quantity)
-                        : handleAddToCart(product, quantity)
+                      onClick={(e) =>
+                        e.preventDefault()
+                          ? handleAddToCart(product, quantity)
+                          : handleAddToCart(product, quantity)
                       }
                       className="w-full lg:w-[50%] mt-2 flex items-center justify-center gap-2 bg-brandRed text-white px-8 py-4 rounded-full hover:bg-hoverBrandRed transition-colors duration-300 font-montserrat font-medium text-lg disabled:bg-gray-400 disabled:cursor-not-allowed"
                     >
@@ -283,7 +307,9 @@ export default function ProductDetails() {
                           key={`${image}-${index}`}
                           onClick={() => setActiveImageIndex(index)}
                           className={`relative aspect-square overflow-hidden rounded-lg border transition-colors duration-300 ${
-                            activeImageIndex === index ? "border-brandRed" : "border-transparent"
+                            activeImageIndex === index
+                              ? 'border-brandRed'
+                              : 'border-transparent'
                           }`}
                         >
                           <img
@@ -296,26 +322,24 @@ export default function ProductDetails() {
                     </div>
                   </div>
                 )}
-                
               </div>
-
             </div>
           </div>
         </div>
-         <ToastContainer 
-        position="top-right"
-        autoClose={3000}
-        hideProgressBar={false}
-        newestOnTop={false}
-        closeOnClick
-        rtl={false}
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover
-        theme="light"
-        style={{ zIndex: 9999 }}
-      />
+        <ToastContainer
+          position="top-right"
+          autoClose={3000}
+          hideProgressBar={false}
+          newestOnTop={false}
+          closeOnClick
+          rtl={false}
+          pauseOnFocusLoss
+          draggable
+          pauseOnHover
+          theme="light"
+          style={{ zIndex: 9999 }}
+        />
       </div>
     </Layout>
-  );
+  )
 }
