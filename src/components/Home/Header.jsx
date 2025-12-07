@@ -1,13 +1,28 @@
 import bgVideo from '../../assets/Videos/bgVideo.mp4';
+import posterImg from '../../assets/Images/productsBG.jpg';
 
 export default function Header() {
   return (
     <header className="relative h-screen w-full overflow-hidden flex flex-col justify-between">
 
-      <video className="absolute top-0 left-0 h-full w-full object-cover"
-        src={bgVideo} autoPlay loop muted playsInline 
-      />
-      
+    <img
+      src={posterImg}
+      className="absolute top-0 left-0 h-full w-full object-cover"
+      alt="LunaLuxe"
+    />
+
+    <video
+      className="absolute top-0 left-0 h-full w-full object-cover opacity-0 transition-opacity duration-500"
+      src={bgVideo}
+      poster={posterImg}
+      autoPlay
+      muted
+      fetchPriority="high"
+      loop
+      playsInline
+      onLoadedData={(e) => e.target.classList.remove('opacity-0')}
+    ></video>
+
       {/* overlay to darken video */}
       <div className="absolute top-0 left-0 h-full w-full bg-black/40 z-0"></div>
       

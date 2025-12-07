@@ -89,7 +89,9 @@ export default function Footer() {
             </p>
             <div className="space-y-3">
               <input
+                id="email"
                 type="email"
+                autoComplete="email"
                 placeholder="Your email"
                 className="w-full px-4 py-2 bg-neutral-800 border border-neutral-700 rounded focus:outline-none focus:border-brandRed transition-colors text-sm"
               />
