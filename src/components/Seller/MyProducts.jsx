@@ -9,7 +9,7 @@ import {
 } from '../../features/productSlice';
 import { fetchCategoriesAsync } from '../../features/categorySlice';
 
-const VITE_API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:3001/';
+const VITE_API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'https://emarketlunaluxe6.vercel.app';
 const PLACEHOLDER_IMAGE = "https://images.unsplash.com/photo-1620916566398-39f1143ab7be?w=400&h=500&fit=crop";
 
 const getImageUrl = (image) => {

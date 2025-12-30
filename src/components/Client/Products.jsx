@@ -18,7 +18,7 @@ export default function Products() {
   const user = localStorage.getItem("user") ? JSON.parse(localStorage.getItem("user")).id : null;
   const { addToCart } = useCart(user.id);
 
-  const apiBaseUrl = import.meta.env.VITE_API_BASE_URL || 'http://localhost:3001/';
+  const apiBaseUrl = import.meta.env.VITE_API_BASE_URL || 'https://emarketlunaluxe6.vercel.app  ';
 
   // Helper function to build image URL
   const buildImageUrl = (path) => {
