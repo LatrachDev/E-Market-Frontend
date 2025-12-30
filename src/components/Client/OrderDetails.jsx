@@ -3,8 +3,11 @@ import { useOrders } from "../../Hooks/UseOrders";
 
 function OrderDetails() {
   const { id } = useParams(); // récupère l'ID depuis l'URL
+  // console.log("Order ID from URL:", id);
   const { fetchOrderById, updateStatusOrder } = useOrders();
   const { data: order, isLoading, isError } = fetchOrderById(id);
+  console.log(order);
+  
 
   if (isLoading) return <p className="text-center mt-20">Chargement...</p>;
   if (isError || !order)

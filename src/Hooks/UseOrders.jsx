@@ -218,6 +218,8 @@ useEffect(() => {
     queryKey: ["order", orderId],
     queryFn: async () => {
       const res = await api.get(`/orders/${orderId}`);
+      console.log(res);
+      
       return res.data.data;
     },
     enabled: !!orderId,
