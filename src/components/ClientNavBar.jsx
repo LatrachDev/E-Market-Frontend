@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import { Package, ShoppingCart, User, LogOut } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
-import { useCart } from "../hooks/useCart";
+import { useCart } from "../Hooks/useCart";
 import { useSelector } from "react-redux";
 
 function ClientNavBar() {

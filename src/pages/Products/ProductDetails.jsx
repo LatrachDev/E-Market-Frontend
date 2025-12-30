@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { ShoppingCart, ArrowLeft, Heart, Share2 } from "lucide-react";
 import API_ENDPOINTS, { api } from "../../config/api";
-import { useCart, } from "../../hooks/useCart";
+import { useCart, } from "../../Hooks/useCart";
 import Layout from "../../components/Layout";
 
 import { ToastContainer } from 'react-toastify';

@@ -2,7 +2,7 @@ import { Outlet } from "react-router-dom";
 import NavBar from "../../components/NavBar";
 import Products from "../../components/Client/Products";
 import MyOrders from "../../pages/Client/MyOrders";
-import { useCart } from "../../hooks/useCart";
+import { useCart } from "../../Hooks/useCart";
 
 export default function ClientDashboard() {
     // Charger le panier au montage du composant

@@ -1,5 +1,5 @@
 import { useState } from "react";
-import  {useCart, } from "../../hooks/useCart";
+import  {useCart, } from "../../Hooks/useCart";
 import ClientNavBar from "../ClientNavBar";
 import { Trash2, ShoppingCart, Plus, Minus } from "lucide-react";
 

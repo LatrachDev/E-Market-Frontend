@@ -3,7 +3,7 @@ import { ShoppingCart, Search, Filter, ChevronLeft, ChevronRight } from "lucide-
 import { api } from "../../config/api";
 import API_ENDPOINTS from "../../config/api";
 import { Link } from "react-router-dom";
-import { useCart, } from "../../hooks/useCart";
+import { useCart, } from "../../Hooks/useCart";
 
 const PLACEHOLDER_IMAGE = "https://images.unsplash.com/photo-1620916566398-39f1143ab7be?w=400&h=500&fit=crop";
 const ITEMS_PER_PAGE = 8;

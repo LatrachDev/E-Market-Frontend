@@ -1,7 +1,7 @@
 import NavBar from './NavBar';
 import Footer from './Footer';
 import ClientNavBar from './ClientNavBar';
-import { useCart } from '../hooks/useCart';
+import { useCart } from '../Hooks/useCart';
 import { useEffect } from 'react';
 
 function isAuthenticated() {

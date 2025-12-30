@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { X } from "lucide-react";
-import { useOrders } from "../../hooks/UseOrders";
+import { useOrders } from "../../Hooks/UseOrders";
 
 
 export default function OrdersPage() {

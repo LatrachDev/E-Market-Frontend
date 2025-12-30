@@ -6,7 +6,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { MemoryRouter } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import cartReducer, { setCart, addItem, removeItem, updateQuantity, clearCart } from '../features/cartSlice';
-import { useCart } from '../hooks/useCart';
+import { useCart } from '../Hooks/useCart';
 import CartPage from '../components/Client/Cart';
 import { api } from '../config/api';
 

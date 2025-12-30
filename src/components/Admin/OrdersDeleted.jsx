@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { useOrders } from "../../hooks/UseOrders";
+import { useOrders } from "../../Hooks/UseOrders";
 
 export default function OrdersDeleted() {
   const {

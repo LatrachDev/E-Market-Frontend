@@ -1,5 +1,5 @@
 import React, { Suspense, lazy } from "react";
-import { useSellerStats } from "../../hooks/useUsers";
+import { useSellerStats } from "../../Hooks/useUsers";
 import {BarChart, Bar, XAxis, YAxis, Tooltip, CartesianGrid, ResponsiveContainer, LineChart, Line} from "recharts";
 
 const SellerStatsCard = ({ title, value }) => (

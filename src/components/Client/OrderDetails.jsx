@@ -1,5 +1,5 @@
 import { useParams } from "react-router-dom";
-import { useOrders } from "../../hooks/UseOrders";
+import { useOrders } from "../../Hooks/UseOrders";
 
 function OrderDetails() {
   const { id } = useParams(); // récupère l'ID depuis l'URL
