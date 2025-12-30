@@ -4,7 +4,7 @@
 // import History from '../../components/Home/History';
 // import Routine from '../../components/Home/Routine';
 // import Footer from '../../components/Layouts/Footer';
-import Logs from '../components/Admin/logs';
+import Logs from '../components/Admin/Logs';
 import Footer from '../components/Layouts/Footer';
 import Navbar from '../components/Layouts/NavBar';
 
