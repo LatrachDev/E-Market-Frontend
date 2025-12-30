@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useOrders } from "../../Hooks/useOrders"; // nouveau hook
+import { useOrders } from "../../Hooks/UseOrders"; // nouveau hook
 
 export default function CreateOrder() {
   const navigate = useNavigate();

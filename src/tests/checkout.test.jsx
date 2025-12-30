@@ -4,7 +4,7 @@ import { Provider } from 'react-redux';
 import { configureStore } from '@reduxjs/toolkit';
 import { MemoryRouter, useNavigate } from 'react-router-dom';
 import CreateOrder from '../components/Client/createOrder';
-import useOrders from '../hooks/UseOrders';
+import useOrders from '../Hooks/UseOrders';
 import { createOrder } from '../features/orderSlice';
 import authReducer from '../features/authSlice';
 import cartReducer, { setCart } from '../features/cartSlice';
