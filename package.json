@@ -12,7 +12,7 @@
     "test:coverage": "jest --coverage",
     "test:ui": "jest --ui",
     "preview": "vite preview",
-    "lighthouse": "node scripts/run-lighthouse.js"
+    "lighthouse": "node run-lighthouse.js"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.2.2",
